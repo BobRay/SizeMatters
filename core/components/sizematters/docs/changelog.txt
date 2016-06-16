@@ -1,0 +1,5 @@
+Changelog for SizeMatters
+
+SizeMatters 1.0.0
+---------------------------------
+Initial Version

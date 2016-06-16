@@ -1,0 +1,18 @@
+<script type="text/javascript">
+    window.onload = function () {
+    var w = Math.max(document.documentElement["clientWidth"], document.body["scrollWidth"],
+            document.documentElement["scrollWidth"], document.body["offsetWidth"],
+            document.documentElement["offsetWidth"]);
+    var f = parseFloat(window.getComputedStyle(document.documentElement).fontSize);
+    
+    var ems = Math.round( w / parseFloat(f));
+
+    console.log(w);
+    console.log(f);
+    console.log("Parsed " + parseFloat(f));
+    console.log("ems: " + ems);
+    
+    
+            /* Ajax here */
+        };
+</script>
