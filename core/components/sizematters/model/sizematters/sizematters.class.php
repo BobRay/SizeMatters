@@ -21,26 +21,50 @@
  * @package sizematters
  */
 
+define('SM_ARG_COUNT', 3);
+define('SM_MAX_LEN', 15);
 
-class SizeMatters {
-    /** @var $modx modX */
-    public $modx;
-    /** @var $props array */
-    public $props;
+if (! class_exists('SizeMatters')) {
+    class SizeMatters {
+        /** @var $modx modX */
+        public $modx;
+        /** @var $props array */
+        public $props;
 
-    function __construct(&$modx, &$config = array()) {
-        $this->modx =& $modx;
-        $this->props =& $config;
+        function __construct($config = array()) {
+            $this->props =& $config;
+        }
+
+
+        public function validate($data = array()) {
+            $valid = true;
+            return $valid;
+            if (count($data) !== SM_ARG_COUNT) {
+                $valid =  false;
+            } else {
+                for ($i = 0; $i < SM_ARG_COUNT; $i++) {
+                    if (!is_numeric($data[$i])) {
+                        $valid = false;
+                    }
+                }
+            }
+
+            return $valid;
+
+        }
+
+        public function saveData($data, $path) {
+            $retVal = true;
+            $fp = fopen($path, 'a');
+            if ($fp) {
+                fwrite($fp, $data, SM_MAX_LEN);
+                fclose($fp);
+            } else {
+                $retVal = 'Could not open file for append ' . $path;
+            }
+            return $retVal;
+        }
+
+
     }
-
-    
-    public function sanitize($post = array()) {
-
-    }
-
-    public function saveData($data) {
-
-    }
-
-
 }

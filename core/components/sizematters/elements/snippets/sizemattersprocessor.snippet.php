@@ -33,6 +33,27 @@
  *
  * @package sizematters
  **/
- 
- $modx->log(modX::LOG_LEVEL_ERROR, print_r($_POST, true));
- return '';
+//C:/xampp/htdocs/addons/assets/mycomponents/sizematters/core/components/sizematters/components/sizematters/model/sizematters/sizematters.class.php
+//C:\xampp\htdocs\addons\assets\mycomponents\sizematters\core\components\sizematters\model\sizematters\sizematters.class.php
+/* sm paths; Set the sm. System Settings only for development  in MyComponent */
+$smCorePath = $modx->getOption('sm.core_path', null, MODX_CORE_PATH . 'components/SizeMatters/');
+require_once($smCorePath . 'model/sizematters/sizematters.class.php');
+$smLogPath = $smCorePath . 'logs/';
+$smLogFileName = $smLogPath . 'm-' . date("m");
+
+$sm = new SizeMatters($scriptProperties);
+
+$i = json_decode(stripslashes(file_get_contents("php://input")), true);
+// $modx->log(modX::LOG_LEVEL_ERROR, 'Before Validation: ' . print_r($i, true));
+if ($sm->validate($i)) {
+    $v = implode(',', array_values($i)) . "\n";
+    $status = $sm->saveData($v, $smLogFileName);
+    if ($status !== true) {
+        $modx->log(modX::LOG_LEVEL_ERROR, $status);
+    }
+} else {
+    $modx->log(modX::LOG_LEVEL_ERROR, '[SizeMatters] Invalid Data sent to processor');
+}
+
+
+return '';
