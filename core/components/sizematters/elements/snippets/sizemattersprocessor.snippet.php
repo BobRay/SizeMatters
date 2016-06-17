@@ -43,7 +43,7 @@ $smLogFileName = $smLogPath . 'm-' . date("m");
 
 $sm = new SizeMatters($scriptProperties);
 
-$i = json_decode(stripslashes(file_get_contents("php://input")), true);
+$i = array_values(json_decode(stripslashes(file_get_contents("php://input")), true));
 // $modx->log(modX::LOG_LEVEL_ERROR, 'Before Validation: ' . print_r($i, true));
 if ($sm->validate($i)) {
     $v = implode(',', array_values($i)) . "\n";

@@ -38,7 +38,7 @@ if (! class_exists('SizeMatters')) {
 
         public function validate($data = array()) {
             $valid = true;
-            return $valid;
+
             if (count($data) !== SM_ARG_COUNT) {
                 $valid =  false;
             } else {
