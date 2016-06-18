@@ -59,7 +59,7 @@ $myPicture->drawText(350, 55, "Viewport Width in Ems", array("FontSize" => 20, "
 $myPicture->setShadow(TRUE, array("X" => 1, "Y" => 1, "R" => 0, "G" => 0, "B" => 0, "Alpha" => 10));
 
 /* Draw the chart */
-$settings = array("Gradient" => TRUE, "DisplayPos" => LABEL_POS_TOP, "DisplayValues" => FALSE, "DisplayR" => 0, "DisplayG" => 0, "DisplayB" => 0, "DisplayShadow" => TRUE, ); //array("Surrounding"=>-30,"InnerSurrounding"=>30)
+$settings = array("Gradient" =>FALSE, "DisplayPos" => LABEL_POS_TOP, "DisplayValues" => FALSE, "DisplayR" => 0, "DisplayG" => 0, "DisplayB" => 0, "DisplayShadow" => TRUE, ); //array("Surrounding"=>-30,"InnerSurrounding"=>30)
 $myPicture->drawBarChart($settings);
 
 /* Write the chart legend */
