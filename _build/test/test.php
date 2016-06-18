@@ -45,8 +45,7 @@ $MyData->setSerieDescription("Width in Ems", "Width in ems");
 
 /* Draw serie 1 in red with a 80% opacity */
 
-// $serieSettings = array("R" => 229, "G" => 11, "B" => 11, "Alpha" => 70);
-$serieSettings = array("R" => 255, "G" => 255, "B" => 0, "Alpha" => 70);
+$serieSettings = array("R" => 255, "G" => 0, "B" => 0, "Alpha" => 70);
 $MyData->setPalette("Width in Ems", $serieSettings);
 
 // $MyData->setAbscissa("Width in Ems");
