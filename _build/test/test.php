@@ -10,13 +10,22 @@ $dataFile = 'C:\xampp\htdocs\addons\assets\mycomponents\sizematters\core\compone
 $file = fopen($dataFile, 'r');
 
 $emsMax = 0;
-$ems = array_fill(10, 100, 0);
+$ems = array_fill(10, 100, VOID);
+$pxs = array_fill(10, 100, VOID);
+$fonts = array_fill(10, 100, VOID);
 
 //$line is an array of the csv elements
 while (($line = fgetcsv($file)) !== FALSE) {
     $emsVal = $line[1];
-    $emsVal = $emsVal == 0? VOID : $emsVal;
     $ems[(int)$emsVal]++;
+    
+    $pxVal = $line[0];
+    $pxs[(int)$pxVal]++;
+
+    $fontVal = $line[0];
+    $fonts[(int)$fontVal]++;
+
+
 }
 fclose($file);
 
@@ -38,11 +47,6 @@ $MyData->setSerieDescription("Width in Ems", "Width in ems");
 $MyData->setAxisName(0, "Hits");
 
 
-
-
-
-
-
 /* Create the pChart object */
 $myPicture = new pImage(700, 230, $MyData);
 $myPicture->drawGradientArea(0, 0, 700, 230, DIRECTION_VERTICAL, array("StartR" => 240, "StartG" => 240, "StartB" => 240, "EndR" => 180, "EndG" => 180, "EndB" => 180, "Alpha" => 100));
@@ -54,7 +58,7 @@ $myPicture->setFontProperties(array("FontName" => "C:/xampp/htdocs/addons/assets
 /* Draw the scale  */
 $myPicture->setGraphArea(50, 30, 680, 200);
 $myPicture->drawScale(array("CycleBackground" => TRUE, "LabelSkip" => 9, "DrawSubTicks" => TRUE, "GridR" => 0, "GridG" => 0, "GridB" => 0, "GridAlpha" => 10));
-$myPicture->drawText(350, 55, "Viewport Width in Ems", array("FontSize" => 20, "Align" => TEXT_ALIGN_BOTTOMMIDDLE));
+$myPicture->drawText(350, 55, "Viewport Width in Ems", array("FontSize" => 15, "Align" => TEXT_ALIGN_BOTTOMMIDDLE));
 /* Turn on shadow computing */
 $myPicture->setShadow(TRUE, array("X" => 1, "Y" => 1, "R" => 0, "G" => 0, "B" => 0, "Alpha" => 10));
 
@@ -66,4 +70,6 @@ $myPicture->drawBarChart($settings);
 // $myPicture->drawLegend(580, 12, array("Style" => LEGEND_BOX, "Mode" => LEGEND_HORIZONTAL));
 
 /* Render the picture (choose the best way) */
-$myPicture->autoOutput("drawBarChart.shaded.png");
+$myPicture->autoOutput("ems-bar-chart.shaded.png");
+
+
