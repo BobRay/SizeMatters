@@ -11,7 +11,7 @@ $file = fopen($dataFile, 'r');
 
 $emsMax = 0;
 $ems = array_fill(0, 100, VOID);
-$pxs = array_fill(0, 2000, VOID);
+$pxs = array_fill(1, 2000, VOID);
 $fonts = array_fill(4, 40, VOID);
 
 //$line is an array of the csv elements
@@ -75,8 +75,16 @@ $myPicture->autoOutput("ems-bar-chart.shaded.png");
 /*      Px bar chart      */
 /* ********************** */
 unset($MyData, $MyPicture, $pImage);
+
 /* Create and populate the pData object */
 $MyData = new pData();
+
+/* Force Y axis to start at 0 */
+// $pxs[0] = 1;
+$MyData->addPoints(array(1), "Dummy");
+$serieSettings = array("R" => 255, "G" => 0, "B" => 0, "Alpha" => 0);
+$MyData->setPalette("Dummy", $serieSettings);
+
 $MyData->addPoints($pxs, "Width in CSS Pixels");
 $MyData->setSerieDescription("Width CSS Pixels", "Width in CSS Pixels");
 
