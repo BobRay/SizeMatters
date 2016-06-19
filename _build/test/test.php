@@ -9,21 +9,34 @@ include("C:/xampp/htdocs/addons/assets/mycomponents/sizematters/core/components/
 $dataFile = 'C:\xampp\htdocs\addons\assets\mycomponents\sizematters\core\components\sizematters\logs\m-06';
 $file = fopen($dataFile, 'r');
 
-$emsMax = 0;
+/* Fill arrays with VOID constant (0.123456789) */
 $ems = array_fill(0, 100, VOID);
 $pxs = array_fill(1, 2000, VOID);
 $fonts = array_fill(4, 40, VOID);
 
-//$line is an array of the csv elements
+/* $line is an array of the csv elements */
 while (($line = fgetcsv($file)) !== FALSE) {
+    /* If final array value is VOID, make it one, else increment it */
     $emsVal = $line[1];
-    $ems[(int)$emsVal]++;
-    
+    if ($ems[$emsVal] == VOID) {
+        $ems[$emsVal] = 1;
+    } else {
+        $ems[$emsVal]++;
+    }
+
     $pxVal = $line[0];
-    $pxs[(int)$pxVal]++;
+    if ($pxs[$pxVal] == VOID) {
+        $pxs[$pxVal] = 1;
+    } else {
+        $pxs[$pxVal]++;
+    }
 
     $fontVal = $line[2];
-    $fonts[(int)$fontVal]++;
+    if ($fonts[$fontVal] == VOID) {
+        $fonts[$fontVal] = 1;
+    } else {
+        $fonts[$fontVal]++;
+    }
 
 
 }
