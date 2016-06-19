@@ -82,7 +82,7 @@ fclose($file);
 // $myPicture->drawLegend(580, 12, array("Style" => LEGEND_BOX, "Mode" => LEGEND_HORIZONTAL));
 
     /* Render the picture (choose the best way) */
-    $myPicture->autoOutput("ems-bar-chart.shaded.png");
+    $myPicture->autoOutput("ems-bar-chart.png");
 
 
 
@@ -127,7 +127,7 @@ fclose($file);
 // $myPicture->drawLegend(580, 12, array("Style" => LEGEND_BOX, "Mode" => LEGEND_HORIZONTAL));
 
     /* Render the picture (choose the best way) */
-    $myPicture->autoOutput("pxs-bar-chart.shaded.png");
+    $myPicture->autoOutput("pxs-bar-chart.png");
 
 
 
@@ -174,4 +174,4 @@ $myPicture->drawBarChart($settings);
 // $myPicture->drawLegend(580, 12, array("Style" => LEGEND_BOX, "Mode" => LEGEND_HORIZONTAL));
 
 /* Render the picture (choose the best way) */
-$myPicture->autoOutput("fonts-bar-chart.shaded.png");
+$myPicture->autoOutput("fonts-bar-chart.png");
