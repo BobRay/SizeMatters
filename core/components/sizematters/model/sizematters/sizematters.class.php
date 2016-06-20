@@ -1,4 +1,6 @@
 <?php
+
+/* This is the processor class */
 /**
  * SizeMatters class file for SizeMatters extra
  *
