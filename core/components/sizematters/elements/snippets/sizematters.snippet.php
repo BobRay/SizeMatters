@@ -24,7 +24,7 @@
 /**
  * Description
  * -----------
- * Displays SizeMatters Results
+ * Injects JS to trigger saving the browser data
  *
  * Variables
  * ---------
