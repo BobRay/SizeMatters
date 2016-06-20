@@ -39,7 +39,7 @@
 $smCorePath = $modx->getOption('sm.core_path', null, MODX_CORE_PATH . 'components/SizeMatters/');
 require_once($smCorePath . 'model/sizematters/sizematters.class.php');
 $smLogPath = $smCorePath . 'logs/';
-$smLogFileName = $smLogPath . 'm-' . date("m");
+$smLogFileName = $smLogPath . 'log.txt';
 
 $sm = new SizeMatters($scriptProperties);
 
