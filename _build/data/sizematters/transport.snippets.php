@@ -30,7 +30,7 @@ $snippets[1]->fromArray(array (
   'id' => 1,
   'property_preprocess' => false,
   'name' => 'SizeMatters',
-  'description' => 'Displays SizeMatters Results',
+  'description' => 'Injects JS to save SizeMatters data',
   'properties' => 
   array (
   ),
@@ -48,5 +48,17 @@ $snippets[2]->fromArray(array (
   ),
 ), '', true, true);
 $snippets[2]->setContent(file_get_contents($sources['source_core'] . '/elements/snippets/sizemattersprocessor.snippet.php'));
+
+$snippets[3] = $modx->newObject('modSnippet');
+$snippets[3]->fromArray(array (
+  'id' => 3,
+  'property_preprocess' => false,
+  'name' => 'SizeMattersShowGraphs',
+  'description' => 'Displays analyzed content of the the sizematters log file',
+  'properties' => 
+  array (
+  ),
+), '', true, true);
+$snippets[3]->setContent(file_get_contents($sources['source_core'] . '/elements/snippets/sizemattersshowgraphs.snippet.php'));
 
 return $snippets;
