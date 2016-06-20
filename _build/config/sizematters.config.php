@@ -171,7 +171,7 @@ $components = array(
         'snippets' => array(
             'SizeMatters' => array(
                 'category' => 'SizeMatters',
-                'description' => 'Displays SizeMatters Results',
+                'description' => 'Injects JS to save SizeMatters data',
                 'static' => false,
             ),
 
@@ -179,10 +179,11 @@ $components = array(
                 'category' => 'SizeMatters',
                 'description' => 'Handles Ajax request from SM JS. Writes data to file',
                 'static' => false,
-                'propertySets' => array(
-                    'PropertySet1',
-                    'PropertySet2'
-                ),
+            ),
+            'SizeMattersShowGraphs' => array(
+                'category' => 'SizeMatters',
+                'description' => 'Displays analyzed content of the the sizematters log file',
+                'static' => false,
             ),
 
         ),
@@ -193,12 +194,26 @@ $components = array(
                 'category' => 'SizeMatters',
                 'description' => 'JavaScript injected by SizeMatters snippet'
             ),
-            /*'SizeMattersFormTpl' => array(
-                'description' => 'Description for Chunk two',
+            'SizeMattersFormTpl' => array(
+                'description' => 'Tpl for SizeMatters ShowGraphs page',
                 'category' => 'SizeMatters',
-                'static' => false,
-
-            ),*/
+            ),
+            'SizeMattersEmsTpl' => array(
+                'description' => 'Tpl for Ems graph on SizeMatters ShowGraphs page',
+                'category' => 'SizeMatters',
+            ),
+            'SizeMattersPxsTpl' => array(
+                'description' => 'Tpl for Pxs graph on SizeMatters ShowGraphs page',
+                'category' => 'SizeMatters',
+            ),
+            'SizeMattersFontsTpl' => array(
+                'description' => 'Outer Tpl for Fonts graph on SizeMatters ShowGraphs page',
+                'category' => 'SizeMatters',
+            ),
+            'SizeMattersImageTpl' => array(
+                'description' => 'Tpl for a single image on the SizeMatters ShowGraphs page',
+                'category' => 'SizeMatters',
+            ),
         ),
         'templates' => array(
         ),
@@ -228,6 +243,7 @@ $components = array(
 
         ),
         'SizeMatters' => array(
+            'description' => 'Displays SizeMatters results graphs ',
             'pagetitle' => 'SizeMatters',
             'alias' => 'size-matters',
             'template' => 'default',
@@ -236,8 +252,6 @@ $components = array(
             'hidemenu' => false,
             'searchable' => false,
             'cacheable' => true,
-            'content' => '[[!SizeMatters]]',
-
         ),
     ),
 
@@ -262,6 +276,7 @@ $components = array(
     'assetsDirs' => array(
         /* If true, a default (empty) CSS file will be created */
         'log' => true,
+        'css' => true,
     ),
     /* minify any JS files */
     'minifyJS' => false,
