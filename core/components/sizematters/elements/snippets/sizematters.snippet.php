@@ -33,6 +33,6 @@
  *
  * @package sizematters
  **/
- $modx->regClientStartupHTMLBlock('<meta name="viewport" content="width=device-width, initial-scale=1">');
+ 
  $modx->regClientScript($modx->getChunk('SizeMattersJS'));
  return '';
