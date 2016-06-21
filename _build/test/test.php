@@ -2,12 +2,31 @@
 /* CAT:Bar Chart */
 
 /* pChart library inclusions */
-include("C:/xampp/htdocs/addons/assets/mycomponents/sizematters/core/components/sizematters/model/pChart/class/pData.class.php");
-include("C:/xampp/htdocs/addons/assets/mycomponents/sizematters/core/components/sizematters/model/pChart/class/pDraw.class.php");
-include("C:/xampp/htdocs/addons/assets/mycomponents/sizematters/core/components/sizematters/model/pChart/class/pImage.class.php");
+include "C:/xampp/htdocs/addons/assets/mycomponents/sizematters/core/components/sizematters/model/pChart/class/pData.class.php";
+include "C:/xampp/htdocs/addons/assets/mycomponents/sizematters/core/components/sizematters/model/pChart/class/pDraw.class.php";
+include "C:/xampp/htdocs/addons/assets/mycomponents/sizematters/core/components/sizematters/model/pChart/class/pImage.class.php";
 
-$dataFile = 'C:\xampp\htdocs\addons\assets\mycomponents\sizematters\core\components\sizematters\logs\m-06';
+include 'C:\xampp\htdocs\addons\core\model\modx\modx.class.php';
+
+$modx = new modX();
+$modx->initialize('web');
+$modx->getService('error', 'error.modError');
+
+$scriptProperties = array();
+
+include 'C:\xampp\htdocs\addons\assets\mycomponents\sizematters\core\components\sizematters\model\sizematters\sizemattersdraw.class.php';
+$sm = new SizeMattersDraw($modx, $scriptProperties);
+
+$sm->init();
+$sm->process();
+
+
+
+exit();
+$dataFile = 'C:\xampp\htdocs\addons\assets\mycomponents\sizematters\core\components\sizematters\logs\log.txt';
 $file = fopen($dataFile, 'r');
+
+
 
 /* Fill arrays with VOID constant (0.123456789) */
 $ems = array_fill(0, 100, VOID);
@@ -41,6 +60,8 @@ while (($line = fgetcsv($file)) !== FALSE) {
 
 }
 fclose($file);
+
+
 
     /* ********************** */
     /*      Ems bar chart      */
