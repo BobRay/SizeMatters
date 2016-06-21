@@ -109,7 +109,7 @@ if (!class_exists('SizeMattersDraw')) {
 
                 /*echo "<br>***************** EMs<br>" . print_r($this->ems, true);*/
                 /* echo "<br>***************** Pxs<br>" . print_r($this->pxs, true); */
-                echo "<br>***************** Fonts<br>" . print_r($this->fonts, true);
+                /*echo "<br>***************** Fonts<br>" . print_r($this->fonts, true);*/
             }
         }
 
