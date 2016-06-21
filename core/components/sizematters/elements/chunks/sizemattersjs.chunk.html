@@ -3,14 +3,20 @@
         var w = Math.max(document.documentElement["clientWidth"], document.body["scrollWidth"],
                 document.documentElement["scrollWidth"], document.body["offsetWidth"],
                 document.documentElement["offsetWidth"]);
+        if (w > 2000) {
+            w = 2000;
+        }
         var f = parseFloat(window.getComputedStyle(document.documentElement).fontSize);
 
         var ems = Math.round( w / parseFloat(f));
+        if (ems > 100) {
+            ems = 100;
+        }
 
-        console.log(w);
-        console.log(f);
-        console.log("Parsed " + parseFloat(f));
-        console.log("ems: " + ems);
+        console.log("Width in Ems: " + ems);
+        console.log("Width in CSS Pixels: " + w);
+        console.log("Font Size in Pixels: " + parseFloat(f));
+
 
         data = JSON.stringify({w,ems,f});
                 /* Ajax here */
