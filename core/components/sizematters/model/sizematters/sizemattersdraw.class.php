@@ -197,50 +197,48 @@ if (!class_exists('SizeMattersDraw')) {
                 return '';
             }
             if (! $this->refreshEms) {
-               /* return Tpl */
-            }
+
+                /*     Create Ems bar chart image file     */
+
+                /* Create and populate the pData object */
+                $MyData = new pData();
+                $MyData->addPoints($this->ems, "Width in Ems");
+                $MyData->setSerieDescription("Width in Ems", "Width in ems");
+
+                /* Draw serie 1 in red with a 70% opacity */
+                $serieSettings = array("R" => 255, "G" => 0, "B" => 0, "Alpha" => 70);
+                $MyData->setPalette("Width in Ems", $serieSettings);
+
+                $MyData->setAxisName(0, "Hits");
 
 
-            /*     Create Ems bar chart image file     */
-
-            /* Create and populate the pData object */
-            $MyData = new pData();
-            $MyData->addPoints($this->ems, "Width in Ems");
-            $MyData->setSerieDescription("Width in Ems", "Width in ems");
-
-            /* Draw serie 1 in red with a 70% opacity */
-            $serieSettings = array("R" => 255, "G" => 0, "B" => 0, "Alpha" => 70);
-            $MyData->setPalette("Width in Ems", $serieSettings);
-
-            $MyData->setAxisName(0, "Hits");
+                /* Create the pChart object */
+                $myPicture = new pImage(900, 270, $MyData);
+                $myPicture->drawGradientArea(0, 0, 900, 270, DIRECTION_VERTICAL, array("StartR" => 0, "StartG" => 124, "StartB" => 180, "EndR" => 180, "EndG" => 180, "EndB" => 180, "Alpha" => 100));
+                $myPicture->drawGradientArea(0, 0, 900, 270, DIRECTION_HORIZONTAL, array("StartR" => 240, "StartG" => 240, "StartB" => 240, "EndR" => 180, "EndG" => 180, "EndB" => 180, "Alpha" => 20));
+                $myPicture->setFontProperties(array("FontName" => $this->fontDir . 'verdana.ttf', 'FontSize' => 10));
 
 
-            /* Create the pChart object */
-            $myPicture = new pImage(900, 270, $MyData);
-            $myPicture->drawGradientArea(0, 0, 900, 270, DIRECTION_VERTICAL, array("StartR" => 0, "StartG" => 124, "StartB" => 180, "EndR" => 180, "EndG" => 180, "EndB" => 180, "Alpha" => 100));
-            $myPicture->drawGradientArea(0, 0, 900, 270, DIRECTION_HORIZONTAL, array("StartR" => 240, "StartG" => 240, "StartB" => 240, "EndR" => 180, "EndG" => 180, "EndB" => 180, "Alpha" => 20));
-            $myPicture->setFontProperties(array("FontName" => $this->fontDir . 'verdana.ttf', 'FontSize' => 10));
+                /* Draw the scale  */
+                $myPicture->setGraphArea(50, 30, 880, 200);
+                $myPicture->drawScale(array("CycleBackground" => TRUE, "LabelSkip" => 4, "LabelRotation" => 90, "DrawSubTicks" => TRUE, "GridR" => 0, "GridG" => 0, "GridB" => 0, "GridAlpha" => 10));
+                $myPicture->drawText(450, 55, "Viewport Width in Ems", array("FontSize" => 15, "Align" => TEXT_ALIGN_BOTTOMMIDDLE));
+                $myPicture->drawText(450, 245, "Ems", array("FontSize" => 10, "Align" => TEXT_ALIGN_BOTTOMMIDDLE));
+                /* Turn on shadow computing */
+                $myPicture->setShadow(TRUE, array("X" => 1, "Y" => 1, "R" => 0, "G" => 0, "B" => 0, "Alpha" => 10));
 
+                /* Draw the chart */
+                $settings = array("Gradient" => FALSE, "DisplayPos" => LABEL_POS_TOP, "DisplayValues" => FALSE, "DisplayR" => 0, "DisplayG" => 0, "DisplayB" => 0, "DisplayShadow" => TRUE,); //array("Surrounding"=>-30,"InnerSurrounding"=>30)
+                $myPicture->drawBarChart($settings);
 
-            /* Draw the scale  */
-            $myPicture->setGraphArea(50, 30, 880, 200);
-            $myPicture->drawScale(array("CycleBackground" => TRUE, "LabelSkip" => 4, "LabelRotation" => 90, "DrawSubTicks" => TRUE, "GridR" => 0, "GridG" => 0, "GridB" => 0, "GridAlpha" => 10));
-            $myPicture->drawText(450, 55, "Viewport Width in Ems", array("FontSize" => 15, "Align" => TEXT_ALIGN_BOTTOMMIDDLE));
-            $myPicture->drawText(450, 245, "Ems", array("FontSize" => 10, "Align" => TEXT_ALIGN_BOTTOMMIDDLE));
-            /* Turn on shadow computing */
-            $myPicture->setShadow(TRUE, array("X" => 1, "Y" => 1, "R" => 0, "G" => 0, "B" => 0, "Alpha" => 10));
-
-            /* Draw the chart */
-            $settings = array("Gradient" => FALSE, "DisplayPos" => LABEL_POS_TOP, "DisplayValues" => FALSE, "DisplayR" => 0, "DisplayG" => 0, "DisplayB" => 0, "DisplayShadow" => TRUE,); //array("Surrounding"=>-30,"InnerSurrounding"=>30)
-            $myPicture->drawBarChart($settings);
-
-            /* Write the chart legend */
+                /* Write the chart legend */
 // $myPicture->drawLegend(580, 12, array("Style" => LEGEND_BOX, "Mode" => LEGEND_HORIZONTAL));
 
-            /* Render the picture (choose the best way) */
-            // $file = $this->imagePath . 'ems-bar-chart.png';
-            $url = $this->imageUrl . 'ems-bar-chart.png';
-            $myPicture->render($this->imagePath . 'ems-bar-chart.png');
+                /* Render the picture to .png file */
+
+                $myPicture->render($this->imagePath . 'ems-bar-chart.png');
+
+            }
             $fields = array(
                 'sm.image_url' => $this->imageUrl . 'ems-bar-chart.png',
                 'sm.image_alt' => 'Width in Ems Chart',
@@ -257,48 +255,49 @@ if (!class_exists('SizeMattersDraw')) {
                 return '';
             }
             if (!$this->refreshPxs) {
-                /* return Tpl */
-            }
-            /*     Create Px bar chart image file */
-            unset($MyData, $MyPicture, $pImage);
 
-            /* Create and populate the pData object */
-            $MyData = new pData();
+                /*     Create Px bar chart image file */
+                unset($MyData, $MyPicture, $pImage);
 
-            /* Add main data */
-            $MyData->addPoints($this->pxs, "Width in CSS Pixels");
-            $MyData->setSerieDescription("Width CSS Pixels", "Width in CSS Pixels");
+                /* Create and populate the pData object */
+                $MyData = new pData();
 
-            /* Set bar color */
-            $serieSettings = array("R" => 255, "G" => 0, "B" => 0, "Alpha" => 100);
-            $MyData->setPalette("Width in CSS Pixels", $serieSettings);
+                /* Add main data */
+                $MyData->addPoints($this->pxs, "Width in CSS Pixels");
+                $MyData->setSerieDescription("Width CSS Pixels", "Width in CSS Pixels");
 
-            $MyData->setAxisName(0, "Hits");
+                /* Set bar color */
+                $serieSettings = array("R" => 255, "G" => 0, "B" => 0, "Alpha" => 100);
+                $MyData->setPalette("Width in CSS Pixels", $serieSettings);
 
-            /* Create the pChart object */
-            $myPicture = new pImage(900, 270, $MyData);
-            $myPicture->drawGradientArea(0, 0, 900, 270, DIRECTION_VERTICAL, array("StartR" => 0, "StartG" => 124, "StartB" => 180, "EndR" => 180, "EndG" => 180, "EndB" => 180, "Alpha" => 100));
-            $myPicture->drawGradientArea(0, 0, 900, 270, DIRECTION_HORIZONTAL, array("StartR" => 240, "StartG" => 240, "StartB" => 240, "EndR" => 180, "EndG" => 180, "EndB" => 180, "Alpha" => 20));
-            $myPicture->setFontProperties(array("FontName" => $this->fontDir . 'verdana.ttf', 'FontSize' => 10));
+                $MyData->setAxisName(0, "Hits");
+
+                /* Create the pChart object */
+                $myPicture = new pImage(900, 270, $MyData);
+                $myPicture->drawGradientArea(0, 0, 900, 270, DIRECTION_VERTICAL, array("StartR" => 0, "StartG" => 124, "StartB" => 180, "EndR" => 180, "EndG" => 180, "EndB" => 180, "Alpha" => 100));
+                $myPicture->drawGradientArea(0, 0, 900, 270, DIRECTION_HORIZONTAL, array("StartR" => 240, "StartG" => 240, "StartB" => 240, "EndR" => 180, "EndG" => 180, "EndB" => 180, "Alpha" => 20));
+                $myPicture->setFontProperties(array("FontName" => $this->fontDir . 'verdana.ttf', 'FontSize' => 10));
 
 
-            /* Draw the scale  */
-            $myPicture->setGraphArea(50, 30, 880, 200);
-            $myPicture->drawScale(array("CycleBackground" => TRUE, 'LabelRotation' => 90, "LabelSkip" => 49, "DrawSubTicks" => FALSE, "AutoAxisLabels" => FALSE, "GridR" => 0, "GridG" => 0, "GridB" => 0, "GridAlpha" => 10));
-            $myPicture->drawText(450, 55, "Viewport Width in CSS Pixels", array("FontSize" => 15, "Align" => TEXT_ALIGN_BOTTOMMIDDLE));
-            $myPicture->drawText(450, 250, "CSS Pixels", array("FontSize" => 10, "Align" => TEXT_ALIGN_BOTTOMMIDDLE));
-            /* Turn on shadow computing */
-            $myPicture->setShadow(TRUE, array("X" => 1, "Y" => 1, "R" => 0, "G" => 0, "B" => 0, "Alpha" => 10));
+                /* Draw the scale  */
+                $myPicture->setGraphArea(50, 30, 880, 200);
+                $myPicture->drawScale(array("CycleBackground" => TRUE, 'LabelRotation' => 90, "LabelSkip" => 49, "DrawSubTicks" => FALSE, "AutoAxisLabels" => FALSE, "GridR" => 0, "GridG" => 0, "GridB" => 0, "GridAlpha" => 10));
+                $myPicture->drawText(450, 55, "Viewport Width in CSS Pixels", array("FontSize" => 15, "Align" => TEXT_ALIGN_BOTTOMMIDDLE));
+                $myPicture->drawText(450, 250, "CSS Pixels", array("FontSize" => 10, "Align" => TEXT_ALIGN_BOTTOMMIDDLE));
+                /* Turn on shadow computing */
+                $myPicture->setShadow(TRUE, array("X" => 1, "Y" => 1, "R" => 0, "G" => 0, "B" => 0, "Alpha" => 10));
 
-            /* Draw the chart */
-            $settings = array("Gradient" => FALSE, "DisplayPos" => LABEL_POS_TOP, "DisplayValues" => FALSE, "DisplayR" => 0, "DisplayG" => 0, "DisplayB" => 0, "DisplayShadow" => FALSE,); //array("Surrounding"=>-30,"InnerSurrounding"=>30)
-            $myPicture->drawBarChart($settings);
+                /* Draw the chart */
+                $settings = array("Gradient" => FALSE, "DisplayPos" => LABEL_POS_TOP, "DisplayValues" => FALSE, "DisplayR" => 0, "DisplayG" => 0, "DisplayB" => 0, "DisplayShadow" => FALSE,); //array("Surrounding"=>-30,"InnerSurrounding"=>30)
+                $myPicture->drawBarChart($settings);
 
-            /* Write the chart legend */
+                /* Write the chart legend */
 // $myPicture->drawLegend(580, 12, array("Style" => LEGEND_BOX, "Mode" => LEGEND_HORIZONTAL));
 
-            /* Render the picture (choose the best way) */
-            $myPicture->render($this->imagePath . "pxs-bar-chart.png");
+                /* Render the picture to .png file */
+                $myPicture->render($this->imagePath . "pxs-bar-chart.png");
+            }
+
             $fields = array(
                 'sm.image_url' => $this->imageUrl . 'pxs-bar-chart.png',
                 'sm.image_alt' => 'Width in CSS Pixels Chart',
@@ -315,52 +314,51 @@ if (!class_exists('SizeMattersDraw')) {
                 return '';
             }
             if (!$this->refreshFonts) {
-                /* return Tpl */
-            }
-            /*  Create Font-size bar chart image file   */
 
-            unset($MyData, $MyPicture, $pImage);
+                /*  Create Font-size bar chart image file   */
 
-            /* Create and populate the pData object */
-            $MyData = new pData();
+                unset($MyData, $MyPicture, $pImage);
 
-            /* Force Y axis to start at 0 */
+                /* Create and populate the pData object */
+                $MyData = new pData();
 
-            /* Add main data */
-            $MyData->addPoints($this->fonts, "Font-size in Pixels");
-            $MyData->setSerieDescription("Font-size in Pixels", "Width in CSS Pixels");
+                /* Force Y axis to start at 0 */
 
-            /* Set bar color */
-            $serieSettings = array("R" => 255, "G" => 0, "B" => 0, "Alpha" => 70);
-            $MyData->setPalette("Font-size in Pixels", $serieSettings);
+                /* Add main data */
+                $MyData->addPoints($this->fonts, "Font-size in Pixels");
+                $MyData->setSerieDescription("Font-size in Pixels", "Width in CSS Pixels");
 
-            $MyData->setAxisName(0, "Hits");
+                /* Set bar color */
+                $serieSettings = array("R" => 255, "G" => 0, "B" => 0, "Alpha" => 70);
+                $MyData->setPalette("Font-size in Pixels", $serieSettings);
 
-            /* Create the pChart object */
-            $myPicture = new pImage(900, 270, $MyData);
-            $myPicture->drawGradientArea(0, 0, 900, 270, DIRECTION_VERTICAL, array("StartR" => 0, "StartG" => 124, "StartB" => 180, "EndR" => 180, "EndG" => 180, "EndB" => 180, "Alpha" => 100));
-            $myPicture->drawGradientArea(0, 0, 900, 270, DIRECTION_HORIZONTAL, array("StartR" => 240, "StartG" => 240, "StartB" => 240, "EndR" => 180, "EndG" => 180, "EndB" => 180, "Alpha" => 20));
-            $myPicture->setFontProperties(array("FontName" => $this->fontDir . 'verdana.ttf', 'FontSize' => 10));
+                $MyData->setAxisName(0, "Hits");
+
+                /* Create the pChart object */
+                $myPicture = new pImage(900, 270, $MyData);
+                $myPicture->drawGradientArea(0, 0, 900, 270, DIRECTION_VERTICAL, array("StartR" => 0, "StartG" => 124, "StartB" => 180, "EndR" => 180, "EndG" => 180, "EndB" => 180, "Alpha" => 100));
+                $myPicture->drawGradientArea(0, 0, 900, 270, DIRECTION_HORIZONTAL, array("StartR" => 240, "StartG" => 240, "StartB" => 240, "EndR" => 180, "EndG" => 180, "EndB" => 180, "Alpha" => 20));
+                $myPicture->setFontProperties(array("FontName" => $this->fontDir . 'verdana.ttf', 'FontSize' => 10));
 
 
-            /* Draw the scale  */
-            $myPicture->setGraphArea(50, 30, 880, 200);
-            $myPicture->drawScale(array("CycleBackground" => TRUE, 'LabelRotation' => 90, "AutoAxisLabels" => FALSE, "GridR" => 0, "GridG" => 0, "GridB" => 0, "GridAlpha" => 10));
-            $myPicture->drawText(450, 55, "Font-size in Pixels", array("FontSize" => 15, "Align" => TEXT_ALIGN_BOTTOMMIDDLE));
-            $myPicture->drawText(450, 250, "Pixels", array("FontSize" => 10, "Align" => TEXT_ALIGN_BOTTOMMIDDLE));
-            /* Turn on shadow computing */
-            $myPicture->setShadow(TRUE, array("X" => 1, "Y" => 1, "R" => 0, "G" => 0, "B" => 0, "Alpha" => 10));
+                /* Draw the scale  */
+                $myPicture->setGraphArea(50, 30, 880, 200);
+                $myPicture->drawScale(array("CycleBackground" => TRUE, 'LabelRotation' => 90, "AutoAxisLabels" => FALSE, "GridR" => 0, "GridG" => 0, "GridB" => 0, "GridAlpha" => 10));
+                $myPicture->drawText(450, 55, "Font-size in Pixels", array("FontSize" => 15, "Align" => TEXT_ALIGN_BOTTOMMIDDLE));
+                $myPicture->drawText(450, 250, "Pixels", array("FontSize" => 10, "Align" => TEXT_ALIGN_BOTTOMMIDDLE));
+                /* Turn on shadow computing */
+                $myPicture->setShadow(TRUE, array("X" => 1, "Y" => 1, "R" => 0, "G" => 0, "B" => 0, "Alpha" => 10));
 
-            /* Draw the chart */
-            $settings = array("Gradient" => FALSE, "DisplayPos" => LABEL_POS_TOP, "DisplayValues" => FALSE, "DisplayR" => 0, "DisplayG" => 0, "DisplayB" => 0, "DisplayShadow" => FALSE,); //array("Surrounding"=>-30,"InnerSurrounding"=>30)
-            $myPicture->drawBarChart($settings);
+                /* Draw the chart */
+                $settings = array("Gradient" => FALSE, "DisplayPos" => LABEL_POS_TOP, "DisplayValues" => FALSE, "DisplayR" => 0, "DisplayG" => 0, "DisplayB" => 0, "DisplayShadow" => FALSE,); //array("Surrounding"=>-30,"InnerSurrounding"=>30)
+                $myPicture->drawBarChart($settings);
 
-            /* Write the chart legend */
+                /* Write the chart legend */
 // $myPicture->drawLegend(580, 12, array("Style" => LEGEND_BOX, "Mode" => LEGEND_HORIZONTAL));
 
-            /* Render the picture (choose the best way) */
-            $myPicture->render($this->imagePath . 'fonts-bar-chart.png');
-
+                /* Render the picture to .png file */
+                $myPicture->render($this->imagePath . 'fonts-bar-chart.png');
+            }
             $fields = array(
                 'sm.image_url' => $this->imageUrl . 'fonts-bar-chart.png',
                 'sm.image_alt' => 'Font-size Chart',
