@@ -33,5 +33,11 @@
  *
  * @package sizematters
  **/
- 
- [[!SizeMattersShowGraphs? &showEms=`1` &refreshEms=`1` &showPxs=`0` &refreshPxs=`0` &showFonts=`1` &refreshFonts=`1`  ]]
+
+$smCorePath = $modx->getOption('sm.core_path', null, MODX_CORE_PATH . 'components/SizeMatters/');
+require_once($smCorePath . 'model/sizematters/sizemattersdraw.class.php');
+
+$smGraph = new SizeMattersDraw($modx);
+
+$smGraph->init();
+return $smGraph->process();

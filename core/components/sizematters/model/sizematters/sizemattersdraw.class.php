@@ -69,9 +69,12 @@ if (!class_exists('SizeMattersDraw')) {
             $this->corePath = $this->modx->getOption('sm.core_path', null, MODX_CORE_PATH . 'components/sizematters/');
             $this->modelPath = $this->corePath . '/model/';
             $this->assetsPath = $this->modx->getOption('sm.assets_path', null, MODX_ASSETS_PATH . 'components/sizematters/');
-            $this->imagePath = $this->assetsPath . 'components/sizematters/images/'; 
-            $this->imageUrl = $this->modx->getOption('sm.image_url', null, MODX_ASSETS_URL . 'components/sizematters/images/');;
-            $this->dataDir = $this->corePath . 'components/sizematters/logs/';
+            $this->imagePath = $this->assetsPath . 'images/';
+            if (! is_dir($this->imagePath)) {
+                die("No Image Dir: " . $this->imagePath);
+            }
+            $this->imageUrl = $this->modx->getOption('sm.image_url', null, MODX_ASSETS_URL . 'components/sizematters/images/');
+            $this->dataDir = $this->corePath . 'logs/';
 
             /* If not file exists and (show == true), set refresh true here */
             $path = $this->imagePath . $this->emsPictureFile;
@@ -89,16 +92,25 @@ if (!class_exists('SizeMattersDraw')) {
                 $this->refreshFonts = true;
             }
 
+            /*echo "<br>ShowEms: " . $this->showEms;
+            echo "<br>ShowPxs: " . $this->showPxs;
+            echo "<br>ShowFonts: " . $this->showFonts;
+
+            echo "<br>RefreshEms: " . $this->refreshEms;
+            echo "<br>RefreshPxs: " . $this->refreshPxs;
+            echo "<br>RefreshFonts: " . $this->refreshFonts . '<br><br>';*/
+                        
             if ($this->refreshEms || $this->refreshPxs || $this->refreshFonts) {
                 /* read data file and create appropriate arrays */
-                include $this->modelPath . 'pChart/class/pData.class.php';
-                include $this->modelPath . 'pChart/class/pDraw.class.php';
-                include $this->modelPath . 'pChart/class/pImage.class.php';
+                require_once $this->modelPath . 'pChart/class/pData.class.php';
+                require_once $this->modelPath . 'pChart/class/pDraw.class.php';
+                require_once $this->modelPath . 'pChart/class/pImage.class.php';
                 $this->createArrays();
-            }
 
-            $this->ems = array();
-            
+                /*echo "<br>***************** EMs<br>" . print_r($this->ems, true);*/
+                /* echo "<br>***************** Pxs<br>" . print_r($this->pxs, true); */
+                echo "<br>***************** Fonts<br>" . print_r($this->fonts, true);
+            }
         }
 
         public function process() {
@@ -119,8 +131,12 @@ if (!class_exists('SizeMattersDraw')) {
         }
 
         protected function createArrays() {
+            define("VOID", 0.123456789);
             $dataFile = $this->dataDir . 'log.txt';
             $file = fopen($dataFile, 'r');
+            if (! $file) {
+                die('No Data File ' . $dataFile);
+            }
 
             /* Fill arrays with VOID constant (0.123456789) */
             if ($this->refreshEms) {
@@ -130,11 +146,12 @@ if (!class_exists('SizeMattersDraw')) {
                 $this->pxs = array_fill(1, 2000, VOID);
             }
             if ($this->refreshFonts) {
-                $this->fonts = array_fill(4, 40, VOID);
+                $this->fonts = array_fill(0, 40, VOID);
             }
 
             /* $line is an array of the csv elements */
             while (($line = fgetcsv($file)) !== FALSE) {
+                /* echo "<br>LINE: " . print_r($line, true); */
                 /* If final array value is VOID, make it one, else increment it */
                 if ($this->refreshEms) {
                     $emsVal = $line[1];
@@ -166,6 +183,10 @@ if (!class_exists('SizeMattersDraw')) {
 
             }
             fclose($file);
+
+            /*echo "<br>***************** EMs<br>" . print_r($this->ems, true);
+            echo "<br>***************** Pxs<br>" . print_r($this->pxs, true);
+            echo "<br>***************** Fonts<br>" . print_r($this->fonts, true);*/
         }
 
         /* Next three methods create the image files */
@@ -215,13 +236,16 @@ if (!class_exists('SizeMattersDraw')) {
 // $myPicture->drawLegend(580, 12, array("Style" => LEGEND_BOX, "Mode" => LEGEND_HORIZONTAL));
 
             /* Render the picture (choose the best way) */
-            $file = $this->imagePath . 'ems-bar-chart.png';
+            // $file = $this->imagePath . 'ems-bar-chart.png';
             $url = $this->imageUrl . 'ems-bar-chart.png';
-            $myPicture->autoOutput($this->imagePath . 'ems-bar-chart.png');
+            $myPicture->render($this->imagePath . 'ems-bar-chart.png');
             $fields = array(
-                'sm.image_url' => $this->imageUrl . 'ems-bar-chart.png'
+                'sm.image_url' => $this->imageUrl . 'ems-bar-chart.png',
+                'sm.image_alt' => 'Width in Ems Chart',
             );
-            return $this->modx->getChunk('SizeMattersEmsTpl', $fields);
+            $inner = $this->modx->getChunk('SizeMattersImageTpl', $fields);
+
+            return $this->modx->getChunk('SizeMattersEmsTpl', array('sm.image' => $inner));
 
         }
 
@@ -272,7 +296,15 @@ if (!class_exists('SizeMattersDraw')) {
 // $myPicture->drawLegend(580, 12, array("Style" => LEGEND_BOX, "Mode" => LEGEND_HORIZONTAL));
 
             /* Render the picture (choose the best way) */
-            $myPicture->autoOutput("pxs-bar-chart.png");
+            $myPicture->render($this->imagePath . "pxs-bar-chart.png");
+            $fields = array(
+                'sm.image_url' => $this->imageUrl . 'pxs-bar-chart.png',
+                'sm.image_alt' => 'Width in CSS Pixels Chart',
+            );
+            $inner = $this->modx->getChunk('SizeMattersImageTpl', $fields);
+
+            return $this->modx->getChunk('SizeMattersPxsTpl', array('sm.image' => $inner));
+
 
         }
 
@@ -325,7 +357,16 @@ if (!class_exists('SizeMattersDraw')) {
 // $myPicture->drawLegend(580, 12, array("Style" => LEGEND_BOX, "Mode" => LEGEND_HORIZONTAL));
 
             /* Render the picture (choose the best way) */
-            $myPicture->autoOutput($this->imagePath . 'fonts-bar-chart.png');
+            $myPicture->render($this->imagePath . 'fonts-bar-chart.png');
+
+            $fields = array(
+                'sm.image_url' => $this->imageUrl . 'fonts-bar-chart.png',
+                'sm.image_alt' => 'Font-size Chart',
+            );
+            $inner = $this->modx->getChunk('SizeMattersImageTpl', $fields);
+
+            return $this->modx->getChunk('SizeMattersFontsTpl', array('sm.image' => $inner));
+
 
         }
     }
