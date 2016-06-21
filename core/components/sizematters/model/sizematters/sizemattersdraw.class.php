@@ -50,6 +50,7 @@ if (!class_exists('SizeMattersDraw')) {
         protected $imagePath;
         protected $imageUrl;
         protected $dataDir;
+        protected $fontDir;
         protected $output = '';
 
         function __construct($modx, $config = array()) {
@@ -67,12 +68,13 @@ if (!class_exists('SizeMattersDraw')) {
 
             /* These are all base paths - no filename */
             $this->corePath = $this->modx->getOption('sm.core_path', null, MODX_CORE_PATH . 'components/sizematters/');
-            $this->modelPath = $this->corePath . '/model/';
+            $this->modelPath = $this->corePath . 'model/';
             $this->assetsPath = $this->modx->getOption('sm.assets_path', null, MODX_ASSETS_PATH . 'components/sizematters/');
             $this->imagePath = $this->assetsPath . 'images/';
             if (! is_dir($this->imagePath)) {
                 die("No Image Dir: " . $this->imagePath);
             }
+            $this->fontDir = $this->modelPath . 'pChart/fonts/';
             $this->imageUrl = $this->modx->getOption('sm.image_url', null, MODX_ASSETS_URL . 'components/sizematters/images/');
             $this->dataDir = $this->corePath . 'logs/';
 
@@ -217,7 +219,7 @@ if (!class_exists('SizeMattersDraw')) {
             $myPicture = new pImage(900, 270, $MyData);
             $myPicture->drawGradientArea(0, 0, 900, 270, DIRECTION_VERTICAL, array("StartR" => 0, "StartG" => 124, "StartB" => 180, "EndR" => 180, "EndG" => 180, "EndB" => 180, "Alpha" => 100));
             $myPicture->drawGradientArea(0, 0, 900, 270, DIRECTION_HORIZONTAL, array("StartR" => 240, "StartG" => 240, "StartB" => 240, "EndR" => 180, "EndG" => 180, "EndB" => 180, "Alpha" => 20));
-            $myPicture->setFontProperties(array("FontName" => "C:/xampp/htdocs/addons/assets/mycomponents/sizematters/core/components/sizematters/model/pChart/fonts/verdana.ttf", "FontSize" => 10));
+            $myPicture->setFontProperties(array("FontName" => $this->fontDir . 'verdana.ttf', 'FontSize' => 10));
 
 
             /* Draw the scale  */
@@ -277,7 +279,7 @@ if (!class_exists('SizeMattersDraw')) {
             $myPicture = new pImage(900, 270, $MyData);
             $myPicture->drawGradientArea(0, 0, 900, 270, DIRECTION_VERTICAL, array("StartR" => 0, "StartG" => 124, "StartB" => 180, "EndR" => 180, "EndG" => 180, "EndB" => 180, "Alpha" => 100));
             $myPicture->drawGradientArea(0, 0, 900, 270, DIRECTION_HORIZONTAL, array("StartR" => 240, "StartG" => 240, "StartB" => 240, "EndR" => 180, "EndG" => 180, "EndB" => 180, "Alpha" => 20));
-            $myPicture->setFontProperties(array("FontName" => "C:/xampp/htdocs/addons/assets/mycomponents/sizematters/core/components/sizematters/model/pChart/fonts/verdana.ttf", "FontSize" => 10));
+            $myPicture->setFontProperties(array("FontName" => $this->fontDir . 'verdana.ttf', 'FontSize' => 10));
 
 
             /* Draw the scale  */
@@ -338,7 +340,7 @@ if (!class_exists('SizeMattersDraw')) {
             $myPicture = new pImage(900, 270, $MyData);
             $myPicture->drawGradientArea(0, 0, 900, 270, DIRECTION_VERTICAL, array("StartR" => 0, "StartG" => 124, "StartB" => 180, "EndR" => 180, "EndG" => 180, "EndB" => 180, "Alpha" => 100));
             $myPicture->drawGradientArea(0, 0, 900, 270, DIRECTION_HORIZONTAL, array("StartR" => 240, "StartG" => 240, "StartB" => 240, "EndR" => 180, "EndG" => 180, "EndB" => 180, "Alpha" => 20));
-            $myPicture->setFontProperties(array("FontName" => "C:/xampp/htdocs/addons/assets/mycomponents/sizematters/core/components/sizematters/model/pChart/fonts/verdana.ttf", "FontSize" => 10));
+            $myPicture->setFontProperties(array("FontName" => $this->fontDir . 'verdana.ttf', 'FontSize' => 10));
 
 
             /* Draw the scale  */
