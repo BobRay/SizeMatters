@@ -243,9 +243,20 @@ $components = array(
 
         ),
         'SizeMatters' => array(
-            'description' => 'Displays SizeMatters results graphs ',
+            'description' => 'Injects JS to save SizeMatters data',
             'pagetitle' => 'SizeMatters',
             'alias' => 'size-matters',
+            'template' => 'default',
+            'richtext' => false,
+            'published' => false,
+            'hidemenu' => false,
+            'searchable' => false,
+            'cacheable' => true,
+        ),
+        'SizeMattersShowGraph' => array(
+            'description' => 'Displays Results',
+            'pagetitle' => 'SizeMatters Show Graphs',
+            'alias' => 'size-matters-show-graphs',
             'template' => 'default',
             'richtext' => false,
             'published' => false,
