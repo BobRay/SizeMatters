@@ -196,7 +196,7 @@ if (!class_exists('SizeMattersDraw')) {
             if (! $this->showEms) {
                 return '';
             }
-            if (! $this->refreshEms) {
+            if ($this->refreshEms) {
 
                 /*     Create Ems bar chart image file     */
 
@@ -254,7 +254,7 @@ if (!class_exists('SizeMattersDraw')) {
             if (!$this->showPxs) {
                 return '';
             }
-            if (!$this->refreshPxs) {
+            if ($this->refreshPxs) {
 
                 /*     Create Px bar chart image file */
                 unset($MyData, $MyPicture, $pImage);
@@ -313,7 +313,7 @@ if (!class_exists('SizeMattersDraw')) {
             if (!$this->showFonts) {
                 return '';
             }
-            if (!$this->refreshFonts) {
+            if ($this->refreshFonts) {
 
                 /*  Create Font-size bar chart image file   */
 
