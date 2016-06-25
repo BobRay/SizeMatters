@@ -129,7 +129,7 @@ $resources[3]->fromArray(array (
   'privateweb' => false,
   'privatemgr' => false,
   'content_dispo' => 0,
-  'hidemenu' => false,
+  'hidemenu' => true,
   'class_key' => 'modDocument',
   'context_key' => 'web',
   'content_type' => 1,
