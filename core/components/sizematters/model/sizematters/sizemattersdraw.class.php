@@ -181,8 +181,6 @@ if (!class_exists('SizeMattersDraw')) {
                         $this->fonts[$fontVal]++;
                     }
                 }
-
-
             }
             fclose($file);
 
@@ -197,7 +195,7 @@ if (!class_exists('SizeMattersDraw')) {
                 return '';
             }
             if ($this->refreshEms) {
-
+                set_time_limit(0);
                 /*     Create Ems bar chart image file     */
 
                 /* Create and populate the pData object */
@@ -255,7 +253,7 @@ if (!class_exists('SizeMattersDraw')) {
                 return '';
             }
             if ($this->refreshPxs) {
-
+                set_time_limit(0);
                 /*     Create Px bar chart image file */
                 unset($MyData, $MyPicture, $pImage);
 
@@ -314,7 +312,7 @@ if (!class_exists('SizeMattersDraw')) {
                 return '';
             }
             if ($this->refreshFonts) {
-
+                set_time_limit(0);
                 /*  Create Font-size bar chart image file   */
 
                 unset($MyData, $MyPicture, $pImage);
