@@ -59,6 +59,11 @@ if($object->xpdo) {
                   'parent' => '0',
                   'template' => '0',
                 ),
+                2 =>  array (
+                  'pagetitle' => 'SizeMatters Show Graphs',
+                  'parent' => '0',
+                  'template' => 'default',
+                ),
             );
 
             if (is_array($intersects)) {
