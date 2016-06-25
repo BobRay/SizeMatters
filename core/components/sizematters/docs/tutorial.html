@@ -1,20 +1,220 @@
-<p>SizeMatters project for MyComponent extra</p>
+
+
+<p>SizeMatters records and displays a record of the viewport width (in both Ems and CSS Pixels) of
+the visitors to your site. It also shows the font size used.</p>
 
 <p>(Jump to <a href="[[~[[*id]]]]#propertiesTable">Properties Table</a>.)</p>
+
+<p>&nbsp;</p>
+
 
 <h3>Installing SizeMatters</h3>
 
 <p>
-Go to System | Package Management on the main menu in the MODX Manager and click on the &quot;Download Extras&quot; button. That will take you to the
-Revolution Repository (AKA Web Transport Facility). Put SizeMatters in the search box and press Enter. Click on the &quot;Download&quot; button, and once the package is downloaded,
- click on the &quot;Back to Package Manager&quot; button. That should bring you back to your Package Management grid. Click on the
-&quot;Install&quot; button next to SizeMatters in the grid. The SizeMatters package should now be installed.</p>
+    Go to Extras | Installer on the main menu in the MODX Manager and click on the &quot;Download
+    Extras&quot; button. That will take you to the Revolution Repository (AKA Web Transport
+    Facility). Put SizeMatters in the search box and press Enter. Click on the &quot;Download&quot;
+    button, and once the package is downloaded, click on the &quot;Back to Package Manager&quot;
+    button. That should bring you back to your Package Management grid. Click on the
+    &quot;Install&quot; button next to SizeMatters in the grid. The SizeMatters package should now be
+    installed.</p>
+
+
+<p>&nbsp;</p>
+
 
 <h3>Usage</h3>
 
+<p>To start recording, put this tag anywhere in the body section of a Template or at the end of
+    the Resource Content field of a resource.</p>
 
+<pre class="brush: html; toolbar: false;"><fixedpre>
+[[!SizeMatters]]
+</fixedpre></pre>
+
+<p>&nbsp;</p>
+
+<div class="box">
+    <p>SizeMatters writes a short line of text to the raw data file (<code>core/components/sizematters/logs/log.txt</code>)
+    each time a page with the SizeMatters snippet tag is visited. The file can get very large depending on
+    how many pages are involved and how busy your site is. The recommended place for the tag is at the end of
+    the Resource Content field for your home page. If the tag is in a Template that's used by a lot
+    of pages, the log can grow very big, very fast. The PHP process that analyzes the data and draws the
+    graphs may time out.</p>
+</div>
+
+<p>&nbsp;</p>
+
+<p>The snippet just injects a small amount of JavaScript code that calls a processor asynchronously, so it shouldn't
+have much effect on page-load times.</p>
+
+<p>To show the results, just view the SizeMatters Show Graphs resource. You can control which graphs are shown and whether or not they are up-to-date with the properties of the SizeMattersShowGraphs snippet on that page.</p>
+
+<pre class="brush: html; toolbar: false;"><fixedpre>
+[[!SizeMattersShowGraphs?
+    &showEms=`1`
+    &refreshEms=`1`
+    &showPxs=`1`
+    &refreshPxs=`1`
+    &showFonts=`1`
+    &refreshFonts=`1`
+]]
+</fixedpre></pre>
+
+
+<p>The three <code>&show</code> properties determine whether each graph is shown. The three <code>&refresh</code>
+properties determine whether a new graph is drawn before showing it. Processing the raw values and drawing
+each graph takes time (especially for the Pixels graph), so you may want to turn refreshing off once you have a significant amount of data
+ to display, and turn it back on periodically to bring the graphs up to date.</p>
+
+<p>If the raw data file has grown very large, the analysis of the data and graph drawing may cause a PHP timeout.
+    In that case, you won't see the graphs and may see a blank page. If this turns out to be a common problem, I
+may rewrite the code to extract the processed data to a much smaller file when refreshing things.</p>
+
+<p>If your site is very busy, you may choose to put the tag in the Resource Content field of a page
+that's not visited very often.</p>
+
+<p>&nbsp;</p>
+<h3>Using the Information</h3>
+
+
+<p>It's generally a bad practice to code for specific devices, but it's nice to know the
+    viewport sizes used by your site's visitors. Keep in mind the fact that if no one is visiting
+    your site with mobile devices, it may be because your site looks terrible on a phone. As you
+    alter your site's design, you can delete the log file, rename the images to save them, and
+    see if the new design is attracting more mobile or tablet users.</p>
+
+<p>Once you have enough data, SizeMatters may help you fine-tune the breakpoints you use in your
+    media queries. Any responsive design strategy involves compromises, and seeing the
+    distribution of viewport widths for your site visitor may help with those decisions.</p>
+
+<p>At some point, if there is some demand for it, I may add a feature to show the percentages of
+    users visiting with phone, tablet,  laptop, and desktop devices.</p>
+
+<p>How to approach Responsive site design is controversial, but doing a mobile-first design is
+    a common recommendation. I like using Ems and percentages almost exclusively. (Please don't
+    use this site as an example until I get around to making it responsive &mdash; I beg you not
+    to look at the current CSS and HTML used at Bob's Guides &mdash; it's an embarrassing,
+    shoemaker's child mess.)
+</p>
+
+<p>In a mobile-first design, the CSS at the top of your CSS file is for mobile devices. Once you
+    have the site looking good on a phone, you add media queries that modify the site for larger
+    devices. The breakpoints you use will depend on what SizeMatters tells you, and your
+    particular site's requirements. Using Ems and percentages helps with that, as does having a
+    meta viewport tag in the head section of all your Templates. Generally, the only thing I use
+    pixels for is border widths. You can even do drop shadow and border radius values in Ems. The
+    width of divs, imo, is best specified in percentages, and you can set the font-size of the
+    <code>body</code> section as either 1 Em or 100%, so the user's browser defaults will set
+    the font size, and pinching and zooming will work as expected.
+</p>
+
+<p>&nbsp;</p>
+
+<h3>Testing Your Responsive Design</h3>
+
+<p>If you can't afford a device simulator, and you're doing your development on a localhost
+    install (so you can't use any of the online simulators), a nice substitute is the device
+    simulator in Google Chrome's Dev. Tools. At present, Firefox's simulations just involve
+    shrinking the browser window. Chrome actually responds with the viewport's correct
+    dimensions, and where appropriate, the pixel density. In other words, it responds 
+    correctly to media queries in your CSS. Whenever I've used it, and later
+    tested on the actual devices, the simulation has been dead on.</p>
+
+<p>To use Chrome's simulator, go into Dev. Tools (Ctrl-shift-i). At the left side of its menu,
+    you'll see a box with a smaller box inset. Clicking on that will take you to the device
+    simulator. At the top of the screen, there's a report on the current device being simulated
+    and a drop-down menu for switching to another device. At the bottom of the drop-down menu,
+    there's an 'Edit' option that lets you add devices to the list.</p>
+
+<p>At the right side of the device description at the top of the screen, there's an angled
+   icon that will let you switch from portrait to landscape mode. You can control what's
+   displayed in the device description by clicking on the three dots to the far right of the
+   description line. There, you can also capture a screen shot of the device's display.</p>
+
+<p>To exit the simulator, just click again on the simulator icon at the left end of the Dev. 
+    Tools menu.</p>
+
+
+<p>&nbsp;</p>
+
+<p>How SizeMatters Works</p>
+
+<p>SizeMatters injects JavaScript into the page that asks the browser about the font size and viewport
+width (not the device with, because ... who cares). The results may depend on whether you have a
+meta viewport tag and what's in it. The JS sends a the three data points to a processor with and
+asynchronous Ajax call. The JS is vanilla (no Jquery). The processor sanitizes the data
+and records it as a single line in a CSV data file.</p>
+
+<p>If the <code>&refresh</code> option is on, the SizeMattersShowGraphs snippet reads and
+    analyzes the data from  the file and sends it to the graphing software, which creates a .png
+    image for each graph, then the graphs are displayed (depending on the <code>&show</code>
+    properties) with a standard <code>img</code> tag.</p>
+
+<p>If the <code>&refresh</code> option is off, the existing (possibly out-of-date) graphs are shown.</p>
+
+<p>The graphs are produced with <a target="_blank" href="http://www.pchart.net/">pChart 2.0</a>.</p>
+
+<p>&nbsp;</p>
+
+<h3>Security Issues</h3>
+
+<p>As far as I know, there aren't any. The processor that writes the data will only write very
+    short lines containing only numbers and commas. It converts all input to numbers. The code
+    that processes the data also converts everything to numbers and all it does with the data is
+    send it to the graphing software. There is no database access at any point, and even if
+    someone managed to introduce malicious code, all it would do is confuse the graphing software.</p>
+
+    <p>As always, it's strongly recommended that you <a href="https://rtfm.modx.com/revolution/2.x/administering-your-site/security/hardening-modx-revolution" target="_blank">harden your
+        MODX site</a> so that the core directory is not accessible via URL, either by moving the
+    core above the web root, or adding the appropriate .htaccess file (I prefer the first method).</p>
+
+
+<p>&nbsp;</p>
 
 
 <a name="propertiesTable"></a>
 
 <h3>SizeMatters Properties</h3>
+
+<table class="properties">
+    <tr>
+        <th>Setting</th>
+        <th>Description</th>
+        <th>Default</th>
+    </tr>
+
+    <tr>
+        <td>showEms</td>
+        <td>Show the Ems graph in the results</td>
+        <td>Yes</td>
+    </tr>
+    <tr>
+        <td>refreshEms</td>
+        <td>Process the raw data and create a new Ems graph image</td>
+        <td>Yes</td>
+    </tr>
+
+    <tr>
+        <td>showPxs</td>
+        <td>Show the CSS Pixel graph in the results</td>
+        <td>Yes</td>
+    </tr>
+    <tr>
+        <td>refreshEms</td>
+        <td>Process the raw data and create a new Pixels graph image</td>
+        <td>Yes</td>
+    </tr>
+    <tr>
+        <td>showFonts</td>
+        <td>Show the Fonts graph in the results</td>
+        <td>Yes</td>
+    </tr>
+    <tr>
+        <td>refreshFonts</td>
+        <td>Process the raw data and create a new Fonts graph image</td>
+        <td>Yes</td>
+    </tr>
+    
+    
+</table>
