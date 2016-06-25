@@ -253,7 +253,7 @@ $components = array(
             'searchable' => false,
             'cacheable' => true,
         ),
-        'SizeMattersShowGraph' => array(
+        'SizeMatters Show Graphs' => array(
             'description' => 'Displays Results',
             'pagetitle' => 'SizeMatters Show Graphs',
             'alias' => 'size-matters-show-graphs',
@@ -507,6 +507,7 @@ $components = array(
     'exportResources' => array(
         'SizeMatters',
         'SizeMattersProcessor',
+        'SizeMatters Show Graphs',
     ),
     /* Array of resource parent IDs to get children of. */
     'parents' => array(),
