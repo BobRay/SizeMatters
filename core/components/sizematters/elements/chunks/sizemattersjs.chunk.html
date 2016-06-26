@@ -1,25 +1,36 @@
 <script type="text/javascript">
     window.onload = function () {
+        var dpr = window.devicePixelRatio || 1;
+
         var w = Math.max(document.documentElement["clientWidth"], document.body["scrollWidth"],
                 document.documentElement["scrollWidth"], document.body["offsetWidth"],
                 document.documentElement["offsetWidth"]);
+
+        var f = parseFloat(window.getComputedStyle(document.body).fontSize);
+
+        /* Kindle Fire HDX adjustments */
+        if (dpr == 2 && (w==1600 || w==2559)) {
+            w = Math.round(w / dpr);
+            f = f/2;
+        }
+
         if (w > 2000) {
             w = 2000;
         }
-        var f = parseFloat(window.getComputedStyle(document.documentElement).fontSize);
 
-        var ems = Math.round( w / parseFloat(f));
+        var ems = Math.round( w / f);
         if (ems > 100) {
             ems = 100;
         }
 
+
+        console.log("DPR: " + dpr);
         console.log("Width in Ems: " + ems);
         console.log("Width in CSS Pixels: " + w);
-        console.log("Font Size in Pixels: " + parseFloat(f));
+        console.log("Font Size in Pixels: " + f);
 
 
         data = JSON.stringify({w,ems,f});
-                /* Ajax here */
         var bustCache = '?' + new Date().getTime();
         var request = new XMLHttpRequest();
         request.open('POST', '[[++site_url]]size-matters-processor.html' + bustCache, true);
