@@ -34,6 +34,7 @@ if (!class_exists('SizeMattersDraw')) {
         protected $ems = array();
         protected $pxs = array();
         protected $fonts = array();
+        protected $pies = array();
 
         protected $showEms;
         protected $refreshEms;
@@ -41,6 +42,8 @@ if (!class_exists('SizeMattersDraw')) {
         protected $refreshPxs;
         protected $showFonts;
         protected $refreshFonts;
+        protected $showPie;
+        protected $refreshPie;
         protected $emsPictureFile = 'ems-bar-chart.png';
         protected $pxsPictureFile = 'pxs-bar-chart.png';
         protected $fontsPictureFile = 'fonts-bar-chart.png';
@@ -57,7 +60,7 @@ if (!class_exists('SizeMattersDraw')) {
             $this->props = $config;
             $this->modx = $modx;
         }
-        
+
         function init() {
             $this->showEms = $this->modx->getOption('showEms', $this->props, true, true);
             $this->refreshEms = $this->modx->getOption('refreshEms', $this->props, true, true);
@@ -65,6 +68,8 @@ if (!class_exists('SizeMattersDraw')) {
             $this->refreshPxs = $this->modx->getOption('refreshPxs', $this->props, true, true);
             $this->showFonts = $this->modx->getOption('showFonts', $this->props, true, true);
             $this->refreshFonts = $this->modx->getOption('refreshFonts', $this->props, true, true);
+            $this->showPie = $this->modx->getOption('showPie', $this->props, true, true);
+            $this->refreshPie = $this->modx->getOption('refreshPie', $this->props, true, true);
 
             /* These are all base paths - no filename */
             $this->corePath = $this->modx->getOption('sm.core_path', null, MODX_CORE_PATH . 'components/sizematters/');
@@ -101,12 +106,16 @@ if (!class_exists('SizeMattersDraw')) {
             echo "<br>RefreshEms: " . $this->refreshEms;
             echo "<br>RefreshPxs: " . $this->refreshPxs;
             echo "<br>RefreshFonts: " . $this->refreshFonts . '<br><br>';*/
-                        
-            if ($this->refreshEms || $this->refreshPxs || $this->refreshFonts) {
+
+            if ($this->refreshEms || $this->refreshPxs || $this->refreshFonts || $this->refreshPie) {
                 /* read data file and create appropriate arrays */
                 require_once $this->modelPath . 'pChart/class/pData.class.php';
                 require_once $this->modelPath . 'pChart/class/pDraw.class.php';
                 require_once $this->modelPath . 'pChart/class/pImage.class.php';
+
+                if ($this->refreshPie) {
+                    require_once $this->modelPath . 'pChart/class/pPie.class.php';
+                }
                 $this->createArrays();
 
                 /*echo "<br>***************** EMs<br>" . print_r($this->ems, true);*/
@@ -126,6 +135,10 @@ if (!class_exists('SizeMattersDraw')) {
 
             if ($this->showFonts) {
                 $this->output .= $this->showFontsChart();
+            }
+
+            if ($this->showPie) {
+                $this->output .= $this->showPieChart();
             }
 
             return $this->output;
@@ -180,6 +193,10 @@ if (!class_exists('SizeMattersDraw')) {
                     } else {
                         $this->fonts[$fontVal]++;
                     }
+                }
+
+                if ($this->refreshPie) {
+
                 }
             }
             fclose($file);
@@ -367,5 +384,102 @@ if (!class_exists('SizeMattersDraw')) {
 
 
         }
+
+        public function showPieChart() {
+            if (!$this->showPie) {
+                return '';
+            }
+            if ($this->refreshPie) {
+                set_time_limit(0);
+                /*  Create Font-size bar chart image file   */
+
+                unset($MyData, $MyPicture, $pImage);
+
+                /* Create and populate the pData object */
+                $MyData = new pData();
+
+                /* Force Y axis to start at 0 */
+
+                $this->pies = array(40,30,20,10);
+                /* Add main data */
+                $MyData->addPoints($this->pies, "Visitor Percentages"); //xxx
+                $MyData->setSerieDescription("Visitor Percentages", "Visitor Percentages");
+
+                /* Define the absissa serie */
+
+                $MyData->addPoints(array(" Phone", " Tablet", " Laptop", " Desktop"), "Labels");
+
+                $MyData->setAbscissa("Labels");
+
+                /* Create the pChart object */
+                $myPicture = new pImage(900, 270, $MyData);
+                $myPicture->drawGradientArea(0, 0, 900, 270, DIRECTION_VERTICAL, array("StartR" => 0, "StartG" => 124, "StartB" => 180, "EndR" => 180, "EndG" => 180, "EndB" => 180, "Alpha" => 100));
+                $myPicture->drawGradientArea(0, 0, 900, 270, DIRECTION_HORIZONTAL, array("StartR" => 240, "StartG" => 240, "StartB" => 240, "EndR" => 180, "EndG" => 180, "EndB" => 180, "Alpha" => 20));
+                $myPicture->setFontProperties(array("FontName" => $this->fontDir . 'verdana.ttf', 'FontSize' => 10));
+
+
+                /* Draw the scale  */
+                $myPicture->setGraphArea(50, 30, 880, 200);
+                // $myPicture->drawScale(array("CycleBackground" => TRUE, 'LabelRotation' => 90, "AutoAxisLabels" => FALSE, "GridR" => 0, "GridG" => 0, "GridB" => 0, "GridAlpha" => 10));
+                $myPicture->drawText(450, 55, "Device Percentages", array("FontSize" => 15, "Align"
+                =>
+                    TEXT_ALIGN_BOTTOMMIDDLE));
+                /*$myPicture->drawText(450, 250, "Pixels", array("FontSize" => 10, "Align" =>
+                    TEXT_ALIGN_BOTTOMMIDDLE));*/
+                /* Turn on shadow computing */
+                $myPicture->setShadow(TRUE, array("X" => 1, "Y" => 1, "R" => 0, "G" => 0, "B" => 0, "Alpha" => 10));
+
+                /* Draw the chart */
+               //  $settings = array("Gradient" => FALSE, "DisplayPos" => LABEL_POS_TOP, "DisplayValues" => FALSE, "DisplayR" => 0, "DisplayG" => 0, "DisplayB" => 0, "DisplayShadow" => FALSE,); //array("Surrounding"=>-30,"InnerSurrounding"=>30)
+                // $myPicture->drawBarChart($settings);
+                /* Create the pPie object */
+
+                $PieChart = new pPie($myPicture, $MyData);
+
+                /* Define the slice color */
+
+                $PieChart->setSliceColor(0, array("R" => 128, "G" => 21, "B" => 37));
+                $PieChart->setSliceColor(1, array("R" => 150, "G" => 121, "B" => 9));
+                $PieChart->setSliceColor(2, array("R" => 20, "G" => 72, "B" => 49));
+                $PieChart->setSliceColor(3, array("R" => 25, "G" => 43, "B" => 72));
+
+
+
+                                /* Enable shadow computing */
+
+               /* $myPicture->setShadow(TRUE, array("X" => 3, "Y" => 5, "R" => 0, "G" => 0, "B" =>
+                    1, "Alpha" => 20));*/
+
+
+
+                /* Draw a splitted pie chart */
+
+                $PieChart->draw3DPie(455, 150, array("WriteValues" => TRUE, "DataGapAngle" => 10,
+                    "DataGapRadius" => 6, "Border" => FALSE, "ValueR" => 250, "ValueG" => 250,
+                    "ValueB" => 250, "ValueAlpha" => 100 ));
+
+
+                /* Write the chart legend */
+                $myPicture->setFontProperties(array("FontName" => $this->fontDir . 'verdana.ttf',
+                    "FontSize" => 16, "R" => 100, "G" => 100, "B" => 100));
+                $PieChart->drawPieLegend(100, 100, array("Style" => LEGEND_ROUND, "Mode" =>
+                    LEGEND_VERTICAL, "BoxSize" => 15, 'Margin' => 10));
+
+                /* Render the picture to .png file */
+                $myPicture->render($this->imagePath . 'pie-chart.png');
+            }
+            $fields = array(
+                'sm.image_url' => $this->imageUrl . 'pie-chart.png',
+                'sm.image_alt' => 'Pie Chart',
+            );
+            $inner = $this->modx->getChunk('SizeMattersImageTpl', $fields);
+
+            return $this->modx->getChunk('SizeMattersPieTpl', array('sm.image' => $inner));
+
+
+        }
+
     }
+
+
 }
