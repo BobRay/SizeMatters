@@ -44,6 +44,10 @@ if (!class_exists('SizeMattersDraw')) {
         protected $refreshFonts;
         protected $showPie;
         protected $refreshPie;
+        protected $pieArray;
+        protected $pieValues;
+        protected $pieLabels;
+        protected $pieUnit;
         protected $emsPictureFile = 'ems-bar-chart.png';
         protected $pxsPictureFile = 'pxs-bar-chart.png';
         protected $fontsPictureFile = 'fonts-bar-chart.png';
@@ -55,6 +59,7 @@ if (!class_exists('SizeMattersDraw')) {
         protected $dataDir;
         protected $fontDir;
         protected $output = '';
+
 
         function __construct($modx, $config = array()) {
             $this->props = $config;
@@ -70,6 +75,9 @@ if (!class_exists('SizeMattersDraw')) {
             $this->refreshFonts = $this->modx->getOption('refreshFonts', $this->props, true, true);
             $this->showPie = $this->modx->getOption('showPie', $this->props, true, true);
             $this->refreshPie = $this->modx->getOption('refreshPie', $this->props, true, true);
+            if ($this->refreshPie) {
+                $this->pieArray = $this->modx->getOption('pie', $this->props, array(), true);
+            }
 
             /* These are all base paths - no filename */
             $this->corePath = $this->modx->getOption('sm.core_path', null, MODX_CORE_PATH . 'components/sizematters/');
@@ -163,6 +171,13 @@ if (!class_exists('SizeMattersDraw')) {
             if ($this->refreshFonts) {
                 $this->fonts = array_fill(0, 40, VOID);
             }
+            if ($this->refreshPie) {
+                $this->pieUnit = $this->pieArray['unit'];
+                array_shift($this->pieArray);
+                foreach($this->pieArray as $label => $minMax) {
+                    $this->pieValues[$label] = 0;
+                }
+            }
 
             /* $line is an array of the csv elements */
             while (($line = fgetcsv($file)) !== FALSE) {
@@ -196,10 +211,27 @@ if (!class_exists('SizeMattersDraw')) {
                 }
 
                 if ($this->refreshPie) {
+                    $unitIndex = $this->pieUnit == 'px'? 0 : 1;
+                    $value = $line[$unitIndex];
+                    foreach($this->pieArray as $label => $minMax) {
+                        if ($value >= $minMax['min'] && $value <= $minMax['max']) {
+                            $this->pieValues[$label]++;
+                        }
+                    }
 
                 }
             }
             fclose($file);
+
+            if ($this->refreshPie) {
+                /* Set 0 values to Void */
+                foreach ($this->pieValues as $label => $val) {
+                    if ($val == 0) {
+                        $this->pieValues[$label] = VOID;
+                    }
+                    $this->pieLabels[] = ' ' . $label;
+                }
+            }
 
             /*echo "<br>***************** EMs<br>" . print_r($this->ems, true);
             echo "<br>***************** Pxs<br>" . print_r($this->pxs, true);
@@ -400,15 +432,17 @@ if (!class_exists('SizeMattersDraw')) {
 
                 /* Force Y axis to start at 0 */
 
-                $this->pies = array(40,30,20,10);
+                // $this->pies = array(40,30,20,10);
+                // $pv = array_keys($this->pieValues);
+                $this->pies = array_values($this->pieValues);
                 /* Add main data */
                 $MyData->addPoints($this->pies, "Visitor Percentages"); //xxx
                 $MyData->setSerieDescription("Visitor Percentages", "Visitor Percentages");
 
-                /* Define the absissa serie */
+                /* Define the abscissa serie */
 
-                $MyData->addPoints(array(" Phone", " Tablet", " Laptop", " Desktop"), "Labels");
-
+                // $MyData->addPoints(array(" Phone", " Tablet", " Laptop", " Desktop"), "Labels");
+                $MyData->addPoints($this->pieLabels, "Labels");
                 $MyData->setAbscissa("Labels");
 
                 /* Create the pChart object */
@@ -442,6 +476,7 @@ if (!class_exists('SizeMattersDraw')) {
                 $PieChart->setSliceColor(1, array("R" => 150, "G" => 121, "B" => 9));
                 $PieChart->setSliceColor(2, array("R" => 20, "G" => 72, "B" => 49));
                 $PieChart->setSliceColor(3, array("R" => 25, "G" => 43, "B" => 72));
+                $PieChart->setSliceColor(4, array("R" => 20, "G" => 0, "B" => 0));
 
 
 
@@ -473,8 +508,8 @@ if (!class_exists('SizeMattersDraw')) {
                 'sm.image_alt' => 'Pie Chart',
             );
             $inner = $this->modx->getChunk('SizeMattersImageTpl', $fields);
-
-            return $this->modx->getChunk('SizeMattersPieTpl', array('sm.image' => $inner));
+            $retVal = $this->modx->getChunk('SizeMattersPieTpl', array('sm.image' => $inner));
+            return $retVal;
 
 
         }

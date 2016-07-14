@@ -210,8 +210,16 @@ $components = array(
                 'description' => 'Outer Tpl for Fonts graph on SizeMatters ShowGraphs page',
                 'category' => 'SizeMatters',
             ),
+            'SizeMattersPieTpl' => array(
+                'description' => 'Outer Tpl for Pie chart on SizeMatters ShowGraphs page',
+                'category' => 'SizeMatters',
+            ),
             'SizeMattersImageTpl' => array(
                 'description' => 'Tpl for a single image on the SizeMatters ShowGraphs page',
+                'category' => 'SizeMatters',
+            ),
+            'SizeMattersPieConfig' => array(
+                'description' => 'Configures pie chart. Unit is required, then an arbitrary number of lines in the form: Label:min:max.',
                 'category' => 'SizeMatters',
             ),
         ),
