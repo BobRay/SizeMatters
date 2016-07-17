@@ -34,3 +34,7 @@
  * @package sizematters
  **/
 
+
+
+/* Used in properties.sizemattersshowgraphs.snippet.php */
+$_lang['pie_config_chunk_desc'] = 'Chunk containing unit and breakpoints for Pie Chart';

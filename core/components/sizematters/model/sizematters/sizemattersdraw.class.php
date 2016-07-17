@@ -90,6 +90,25 @@ if (!class_exists('SizeMattersDraw')) {
             $this->fontDir = $this->modelPath . 'pChart/fonts/';
             $this->imageUrl = $this->modx->getOption('sm.image_url', null, MODX_ASSETS_URL . 'components/sizematters/images/');
             $this->dataDir = $this->corePath . 'logs/';
+            /*$emsDataFile = $this->dataDir . 'ems.data';
+            $pxsDataFile = $this->dataDir . 'pxs.data';
+            $fontsDataFile = $this->dataDir . 'fonts.data';
+            $pieDataFile = $this->dataDir . 'pie.data';
+
+            if (! file_exists($emsDataFile)) {
+                $this->createNewDataFile($emsDataFile, 1, 100, 0);
+            }
+
+            if (!file_exists($pxsDataFile)) {
+                $this->createNewDataFile($pxsDataFile, 1, 2000, 0);
+            }
+            if (!file_exists($fontsDataFile)) {
+                $this->createNewDataFile($fontsDataFile, 1, 40, 0);
+            }
+            if (!file_exists($pieDataFile)) {
+                $this->createNewDataFile($pieDataFile, 0, 6, 0);
+            }*/
+
 
             /* If not file exists and (show == true), set refresh true here */
             $path = $this->imagePath . $this->emsPictureFile;
@@ -115,16 +134,16 @@ if (!class_exists('SizeMattersDraw')) {
             echo "<br>RefreshPxs: " . $this->refreshPxs;
             echo "<br>RefreshFonts: " . $this->refreshFonts . '<br><br>';*/
 
-            if ($this->refreshEms || $this->refreshPxs || $this->refreshFonts || $this->refreshPie) {
+            if ($this->showEms || $this->showPxs || $this->showFonts || $this->showPie) {
                 /* read data file and create appropriate arrays */
                 require_once $this->modelPath . 'pChart/class/pData.class.php';
                 require_once $this->modelPath . 'pChart/class/pDraw.class.php';
                 require_once $this->modelPath . 'pChart/class/pImage.class.php';
 
-                if ($this->refreshPie) {
+                if ($this->showPie) {
                     require_once $this->modelPath . 'pChart/class/pPie.class.php';
                 }
-                $this->createArrays();
+                // $this->createArrays();
 
                 /*echo "<br>***************** EMs<br>" . print_r($this->ems, true);*/
                 /* echo "<br>***************** Pxs<br>" . print_r($this->pxs, true); */
@@ -153,7 +172,20 @@ if (!class_exists('SizeMattersDraw')) {
 
         }
 
-        protected function createArrays() {
+       /* protected function createNewDataFile($path, $start, $end, $value = 0) {
+            $data = array_fill($start, $end, $value);
+            $sData = serialize($data);
+            $fp = fopen($path, 'w');
+            if ($fp) {
+                fwrite($fp, $sData);
+                fclose($fp);
+            } else {
+                $this->modx->log(modX::LOG_LEVEL_ERROR, '[SizeMatters] Could not create file: ' . $path);
+            }
+        }*/
+
+
+        protected function XcreateArrays() {
             define("VOID", 0.123456789);
             $dataFile = $this->dataDir . 'log.txt';
             $file = fopen($dataFile, 'r');
@@ -161,7 +193,7 @@ if (!class_exists('SizeMattersDraw')) {
                 die('No Data File ' . $dataFile);
             }
 
-            /* Fill arrays with VOID constant (0.123456789) */
+            // Fill arrays with VOID constant (0.123456789)
             if ($this->refreshEms) {
                 $this->ems = array_fill(0, 100, VOID);
             }
@@ -243,13 +275,26 @@ if (!class_exists('SizeMattersDraw')) {
             if (! $this->showEms) {
                 return '';
             }
+            $file = $this->dataDir . 'ems.data';
+
+            if (! file_exists($file)) {
+                return $this->modx->getChunk('SizeMattersEmsTpl', array('sm.image' => 'Insufficient Data'));
+            }
+
+            $emsArray = unserialize(file_get_contents($file));
+            foreach ($emsArray as $k => $v) {
+                if (empty($v)) {
+                    $emsArray[$k] = VOID;
+                }
+            }
+
             if ($this->refreshEms) {
                 set_time_limit(0);
                 /*     Create Ems bar chart image file     */
 
                 /* Create and populate the pData object */
                 $MyData = new pData();
-                $MyData->addPoints($this->ems, "Width in Ems");
+                $MyData->addPoints($emsArray, "Width in Ems");
                 $MyData->setSerieDescription("Width in Ems", "Width in ems");
 
                 /* Draw serie 1 in red with a 70% opacity */
@@ -301,6 +346,20 @@ if (!class_exists('SizeMattersDraw')) {
             if (!$this->showPxs) {
                 return '';
             }
+
+            $file = $this->dataDir . 'pxs.data';
+
+            if (!file_exists($file)) {
+                return $this->modx->getChunk('SizeMattersPxsTpl', array('sm.image' => 'Insufficient Data'));
+
+            }
+
+            $pxsArray = unserialize(file_get_contents($file));
+            foreach ($pxsArray as $k => $v) {
+                if (empty($v)) {
+                    $pxsArray[$k] = VOID;
+                }
+            }
             if ($this->refreshPxs) {
                 set_time_limit(0);
                 /*     Create Px bar chart image file */
@@ -310,7 +369,7 @@ if (!class_exists('SizeMattersDraw')) {
                 $MyData = new pData();
 
                 /* Add main data */
-                $MyData->addPoints($this->pxs, "Width in CSS Pixels");
+                $MyData->addPoints($pxsArray, "Width in CSS Pixels");
                 $MyData->setSerieDescription("Width CSS Pixels", "Width in CSS Pixels");
 
                 /* Set bar color */
@@ -360,6 +419,19 @@ if (!class_exists('SizeMattersDraw')) {
             if (!$this->showFonts) {
                 return '';
             }
+            $file = $this->dataDir . 'fonts.data';
+
+            if (!file_exists($file)) {
+                return $this->modx->getChunk('SizeMattersFontsTpl', array('sm.image' => 'Insufficient Data'));
+
+            }
+
+            $fontsArray = unserialize(file_get_contents($file));
+            foreach ($fontsArray as $k => $v) {
+                if (empty($v)) {
+                    $fontsArray[$k] = VOID;
+                }
+            }
             if ($this->refreshFonts) {
                 set_time_limit(0);
                 /*  Create Font-size bar chart image file   */
@@ -372,7 +444,7 @@ if (!class_exists('SizeMattersDraw')) {
                 /* Force Y axis to start at 0 */
 
                 /* Add main data */
-                $MyData->addPoints($this->fonts, "Font-size in Pixels");
+                $MyData->addPoints($fontsArray, "Font-size in Pixels");
                 $MyData->setSerieDescription("Font-size in Pixels", "Width in CSS Pixels");
 
                 /* Set bar color */
@@ -421,6 +493,32 @@ if (!class_exists('SizeMattersDraw')) {
             if (!$this->showPie) {
                 return '';
             }
+            $pieConfigChunk = $this->modx->getOption('pieConfigChunk', $this->props, 'SizeMattersPieConfig', true);
+            $chunk = $this->modx->getChunk($pieConfigChunk);
+            $pieConfig = $this->parsePie($chunk);
+            $unit = $pieConfig['unit'];
+            $file = $this->dataDir . $unit . 's' . '.data';
+            if (! file_exists($file)) {
+                return $this->modx->getChunk('SizeMattersPieTpl', array('sm.image' => 'Insufficient Data'));
+            }
+            array_shift($pieConfig);
+            $pieValues = array();
+            $pieLabels = array();
+            foreach ($pieConfig as $label => $minMax) {
+                $pieValues[$label] = 0;
+                $pieLabels[] = $label;
+            }
+
+            $data = unserialize(file_get_contents($file));
+            foreach($data as $key => $value) {
+                foreach ($pieConfig as $label => $minMax) {
+                    if ($key >= $minMax['min'] && $value <= $minMax['max']) {
+                        $pieValues[$label] += $value;
+                    }
+                }
+            }
+
+
             if ($this->refreshPie) {
                 set_time_limit(0);
                 /*  Create Font-size bar chart image file   */
@@ -434,15 +532,15 @@ if (!class_exists('SizeMattersDraw')) {
 
                 // $this->pies = array(40,30,20,10);
                 // $pv = array_keys($this->pieValues);
-                $this->pies = array_values($this->pieValues);
+                $pies = array_values($pieValues);
                 /* Add main data */
-                $MyData->addPoints($this->pies, "Visitor Percentages"); //xxx
+                $MyData->addPoints($pies, "Visitor Percentages"); //xxx
                 $MyData->setSerieDescription("Visitor Percentages", "Visitor Percentages");
 
                 /* Define the abscissa serie */
 
                 // $MyData->addPoints(array(" Phone", " Tablet", " Laptop", " Desktop"), "Labels");
-                $MyData->addPoints($this->pieLabels, "Labels");
+                $MyData->addPoints($pieLabels, "Labels");
                 $MyData->setAbscissa("Labels");
 
                 /* Create the pChart object */
@@ -512,6 +610,25 @@ if (!class_exists('SizeMattersDraw')) {
             return $retVal;
 
 
+        }
+
+        public function parsePie($text) {
+            $pie = array();
+            $lines = explode("\n", $text);
+            $unit = substr($lines[0], 5);
+            $pie['unit'] = trim($unit);
+            for ($i = 1; $i < count($lines); $i++) {
+                if (empty($lines[$i])) {
+                    continue;
+                }
+                $fields = explode(':', $lines[$i]);
+                $label = trim($fields[0]);
+                $pie[$label] = array(
+                    'min' => (float)$fields[1],
+                    'max' => (float)$fields[2],
+                );
+            }
+            return $pie;
         }
 
     }

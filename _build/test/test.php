@@ -1,5 +1,4 @@
 <?php
-/* CAT:Bar Chart */
 
 /* pChart library inclusions */
 include "C:/xampp/htdocs/addons/assets/mycomponents/sizematters/core/components/sizematters/model/pChart/class/pData.class.php";
@@ -40,23 +39,28 @@ Laptops:48:63.99
 Desktops:64:9999
 Other:10000:99999';
 
+
 $chunk = $modx->getChunk('SizeMattersPieConfig');
 
 $scriptProperties = array();
 
-$scriptProperties['pie'] = parsePie($chunk);
-$scriptProperties['showPxs'] = false;
-$scriptProperties['showEms'] = false;
-$scriptProperties['showFonts'] = false;
-$scriptProperties['refreshPxs'] = false;
-$scriptProperties['refreshEms'] = false;
-$scriptProperties['refreshFonts'] = false;
+// $scriptProperties['pie'] = parsePie($chunk);
+$scriptProperties['showPxs'] = true;
+$scriptProperties['showEms'] = true;
+$scriptProperties['showFonts'] = true;
+$scriptProperties['showPie'] = true;
+
+$scriptProperties['refreshPxs'] = true;
+$scriptProperties['refreshEms'] = true;
+$scriptProperties['refreshFonts'] = true;
+$scriptProperties['refreshPie'] = true;
+
 
 include 'C:\xampp\htdocs\addons\assets\mycomponents\sizematters\core\components\sizematters\model\sizematters\sizemattersdraw.class.php';
 $sm = new SizeMattersDraw($modx, $scriptProperties);
 
 $sm->init();
-$sm->process();
+echo $sm->process();
 
 
 

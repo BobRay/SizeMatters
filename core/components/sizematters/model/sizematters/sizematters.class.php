@@ -28,13 +28,20 @@ define('SM_MAX_LEN', 15);
 
 if (! class_exists('SizeMatters')) {
     class SizeMatters {
+        private $debug = false;
         /** @var $modx modX */
         public $modx;
         /** @var $props array */
         public $props;
 
-        function __construct($config = array()) {
+        public $logDir;
+
+        public $dataFiles = array();
+
+        function __construct($logDir, $config = array(), $modx = null) {
             $this->props =& $config;
+            $this->logDir = $logDir;
+            $this->modx = $modx;
         }
 
 
@@ -55,18 +62,114 @@ if (! class_exists('SizeMatters')) {
 
         }
 
-        public function saveData($data, $path) {
-            $retVal = true;
-            $fp = fopen($path, 'a');
-            if ($fp) {
-                fwrite($fp, $data, SM_MAX_LEN);
-                fclose($fp);
-            } else {
-                $retVal = 'Could not open file for append ' . $path;
+        public function saveData($data, $logFileName, $truncateLockFileName) {
+            $success = false;
+
+            for ($tries = 1; $tries <= 3; $tries++) {
+                if (file_exists($truncateLockFileName)) {
+                    sleep($tries * 2);
+                } else {
+                    $fp = fopen($logFileName, 'a');
+                    if ($fp) {
+                        fwrite($fp, $data, SM_MAX_LEN);
+                        fclose($fp);
+                    }
+                    $success = true;
+                    break;
+                }
             }
-            return $retVal;
+
+            return $success? true : '[SizeMatters] Could not open file for append ' . $logFileName;
         }
 
+        public function truncateLogFile($logFileName, $truncateLockFileName) {
+            if ($this->debug) {
+                $this->modx->log(modX::LOG_LEVEL_ERROR, 'In Truncate');
+            }
+            /* Abort if another process is already truncating */
+            if (file_exists($truncateLockFileName)) {
+                if ($this->debug) {
+                    $this->modx->log(modX::LOG_LEVEL_ERROR, 'Locked');
+                }
+                return;
+            }
+            /* Abort if file size is too small */
+            if (filesize($logFileName) < 1000) {
+                if ($this->debug) {
+                    $this->modx->log(modX::LOG_LEVEL_ERROR, 'Small file');
+                }
+                return;
+            }
+            if ($this->debug) {
+                $this->modx->log(modX::LOG_LEVEL_ERROR, 'Updating?');
+            }
+            /* Create lock file to block other processes */
+            $xp = fopen($truncateLockFileName, 'w');
+            if ($xp) {
+                fclose($xp);
+            }
+
+            $this->updateDataFiles($logFileName);
+            /* Truncate main log file */
+            /*$fp = fopen($logFileName, 'w');
+            if ($fp) {
+                fclose($fp);
+            }*/
+            /* Clear lock */
+            unlink($truncateLockFileName);
+
+        }
+        protected function updateDataFiles($logFileName) {
+            $path = $this->logDir;
+
+            if (file_exists($path . 'ems.data')) {
+                $emsData = unserialize(file_get_contents($path . 'ems.data'));
+            } else {
+                $emsData = array_fill(0, 100, 0);
+            }
+            if (file_exists($path . 'pxs.data')) {
+                $pxsData = unserialize(file_get_contents($path . 'pxs.data'));
+            } else {
+                $pxsData = array_fill(0, 2000, 0);
+            }
+            if (file_exists($path . 'fonts.data')) {
+                $fontsData = unserialize(file_get_contents($path . 'fonts.data'));
+            } else {
+                $fontsData = array_fill(0, 40, 0);
+            }
+
+
+            $fp = fopen($logFileName, 'r');
+
+            if ($fp) {
+                while ($line = fgetcsv($fp, 25)) {
+                    $px = (int) $line[0];
+                    // $px = $px > 1000? 1000 : $px;
+                    $pxsData[$px]++;
+                    $em = (int) $line[1];
+                    $emsData[$em]++;
+                    $font = (int) rtrim($line[2]);
+                    $fontsData[$font]++;
+                }
+            }
+            fclose($fp);
+
+            file_put_contents($path . 'ems.data', serialize($emsData));
+            file_put_contents($path . 'pxs.data', serialize($pxsData));
+            file_put_contents($path . 'fonts.data', serialize($fontsData));
+        }
+
+        /*function createNewDataFile($path, $start, $end, $value = 0) {
+            $data = array_fill($start, $end, $value);
+            $sData = serialize($data);
+            $fp = fopen($path, 'w');
+            if ($fp) {
+                fwrite($fp, $sData);
+                fclose($fp);
+            } else {
+                $this->modx->log(modX::LOG_LEVEL_ERROR, '[SizeMatters] Could not create file: ' . $path);
+            }
+        }*/
 
     }
 }

@@ -40,17 +40,24 @@ $smCorePath = $modx->getOption('sm.core_path', null, MODX_CORE_PATH . 'component
 require_once($smCorePath . 'model/sizematters/sizematters.class.php');
 $smLogPath = $smCorePath . 'logs/';
 $smLogFileName = $smLogPath . 'log.txt';
+$smTruncateLockFileName = $smLogPath . 'truncate.txt';
 
-$sm = new SizeMatters($scriptProperties);
+$debug = false;
+
+$sm = new SizeMatters($smLogPath, $scriptProperties, $modx);
 
 $i = array_values(json_decode(stripslashes(file_get_contents("php://input")), true));
 // $modx->log(modX::LOG_LEVEL_ERROR, 'Before Validation: ' . print_r($i, true));
 if ($sm->validate($i)) {
     $v = implode(',', array_values($i)) . "\n";
-    $status = $sm->saveData($v, $smLogFileName);
+    if ($debug) {
+        $modx->log(modX::LOG_LEVEL_ERROR, 'In Processor');
+    }
+    $status = $sm->saveData($v, $smLogFileName, $smTruncateLockFileName);
     if ($status !== true) {
         $modx->log(modX::LOG_LEVEL_ERROR, $status);
     }
+    $sm->truncateLogFile($smLogFileName, $smTruncateLockFileName);
 } else {
     $modx->log(modX::LOG_LEVEL_ERROR, '[SizeMatters] Invalid Data sent to processor');
 }

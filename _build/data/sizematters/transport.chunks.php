@@ -119,4 +119,16 @@ $chunks[8]->fromArray(array (
 ), '', true, true);
 $chunks[8]->setContent(file_get_contents($sources['source_core'] . '/elements/chunks/sizematterspieconfig.chunk.html'));
 
+$chunks[9] = $modx->newObject('modChunk');
+$chunks[9]->fromArray(array (
+  'id' => 9,
+  'property_preprocess' => false,
+  'name' => 'SizeMattersPieConfig2',
+  'description' => 'Configures pie chart. Unit is required, then an arbitrary number of lines in the form: Label:min:max.',
+  'properties' => 
+  array (
+  ),
+), '', true, true);
+$chunks[9]->setContent(file_get_contents($sources['source_core'] . '/elements/chunks/sizematterspieconfig2.chunk.html'));
+
 return $chunks;

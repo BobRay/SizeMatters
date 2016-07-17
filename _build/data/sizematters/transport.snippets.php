@@ -55,10 +55,12 @@ $snippets[3]->fromArray(array (
   'property_preprocess' => false,
   'name' => 'SizeMattersShowGraphs',
   'description' => 'Displays analyzed content of the the sizematters log file',
-  'properties' => 
-  array (
-  ),
 ), '', true, true);
 $snippets[3]->setContent(file_get_contents($sources['source_core'] . '/elements/snippets/sizemattersshowgraphs.snippet.php'));
+
+
+$properties = include $sources['data'].'properties/properties.sizemattersshowgraphs.snippet.php';
+$snippets[3]->setProperties($properties);
+unset($properties);
 
 return $snippets;
