@@ -90,25 +90,6 @@ if (!class_exists('SizeMattersDraw')) {
             $this->fontDir = $this->modelPath . 'pChart/fonts/';
             $this->imageUrl = $this->modx->getOption('sm.image_url', null, MODX_ASSETS_URL . 'components/sizematters/images/');
             $this->dataDir = $this->corePath . 'logs/';
-            /*$emsDataFile = $this->dataDir . 'ems.data';
-            $pxsDataFile = $this->dataDir . 'pxs.data';
-            $fontsDataFile = $this->dataDir . 'fonts.data';
-            $pieDataFile = $this->dataDir . 'pie.data';
-
-            if (! file_exists($emsDataFile)) {
-                $this->createNewDataFile($emsDataFile, 1, 100, 0);
-            }
-
-            if (!file_exists($pxsDataFile)) {
-                $this->createNewDataFile($pxsDataFile, 1, 2000, 0);
-            }
-            if (!file_exists($fontsDataFile)) {
-                $this->createNewDataFile($fontsDataFile, 1, 40, 0);
-            }
-            if (!file_exists($pieDataFile)) {
-                $this->createNewDataFile($pieDataFile, 0, 6, 0);
-            }*/
-
 
             /* If not file exists and (show == true), set refresh true here */
             $path = $this->imagePath . $this->emsPictureFile;
@@ -126,15 +107,7 @@ if (!class_exists('SizeMattersDraw')) {
                 $this->refreshFonts = true;
             }
 
-            /*echo "<br>ShowEms: " . $this->showEms;
-            echo "<br>ShowPxs: " . $this->showPxs;
-            echo "<br>ShowFonts: " . $this->showFonts;
-
-            echo "<br>RefreshEms: " . $this->refreshEms;
-            echo "<br>RefreshPxs: " . $this->refreshPxs;
-            echo "<br>RefreshFonts: " . $this->refreshFonts . '<br><br>';*/
-
-            if ($this->showEms || $this->showPxs || $this->showFonts || $this->showPie) {
+             if ($this->showEms || $this->showPxs || $this->showFonts || $this->showPie) {
                 /* read data file and create appropriate arrays */
                 require_once $this->modelPath . 'pChart/class/pData.class.php';
                 require_once $this->modelPath . 'pChart/class/pDraw.class.php';
@@ -143,12 +116,7 @@ if (!class_exists('SizeMattersDraw')) {
                 if ($this->showPie) {
                     require_once $this->modelPath . 'pChart/class/pPie.class.php';
                 }
-                // $this->createArrays();
-
-                /*echo "<br>***************** EMs<br>" . print_r($this->ems, true);*/
-                /* echo "<br>***************** Pxs<br>" . print_r($this->pxs, true); */
-                /*echo "<br>***************** Fonts<br>" . print_r($this->fonts, true);*/
-            }
+             }
         }
 
         public function process() {
@@ -170,104 +138,6 @@ if (!class_exists('SizeMattersDraw')) {
 
             return $this->output;
 
-        }
-
-       /* protected function createNewDataFile($path, $start, $end, $value = 0) {
-            $data = array_fill($start, $end, $value);
-            $sData = serialize($data);
-            $fp = fopen($path, 'w');
-            if ($fp) {
-                fwrite($fp, $sData);
-                fclose($fp);
-            } else {
-                $this->modx->log(modX::LOG_LEVEL_ERROR, '[SizeMatters] Could not create file: ' . $path);
-            }
-        }*/
-
-
-        protected function XcreateArrays() {
-            define("VOID", 0.123456789);
-            $dataFile = $this->dataDir . 'log.txt';
-            $file = fopen($dataFile, 'r');
-            if (! $file) {
-                die('No Data File ' . $dataFile);
-            }
-
-            // Fill arrays with VOID constant (0.123456789)
-            if ($this->refreshEms) {
-                $this->ems = array_fill(0, 100, VOID);
-            }
-            if ($this->refreshPxs) {
-                $this->pxs = array_fill(1, 2000, VOID);
-            }
-            if ($this->refreshFonts) {
-                $this->fonts = array_fill(0, 40, VOID);
-            }
-            if ($this->refreshPie) {
-                $this->pieUnit = $this->pieArray['unit'];
-                array_shift($this->pieArray);
-                foreach($this->pieArray as $label => $minMax) {
-                    $this->pieValues[$label] = 0;
-                }
-            }
-
-            /* $line is an array of the csv elements */
-            while (($line = fgetcsv($file)) !== FALSE) {
-                /* echo "<br>LINE: " . print_r($line, true); */
-                /* If final array value is VOID, make it one, else increment it */
-                if ($this->refreshEms) {
-                    $emsVal = $line[1];
-                    if ($this->ems[$emsVal] == VOID) {
-                        $this->ems[$emsVal] = 1;
-                    } else {
-                        $this->ems[$emsVal]++;
-                    }
-                }
-
-                if ($this->refreshPxs) {
-                    $pxVal = $line[0];
-                    if ($this->pxs[$pxVal] == VOID) {
-                        $this->pxs[$pxVal] = 1;
-                    } else {
-                        $this->pxs[$pxVal]++;
-                    }
-                }
-
-                if ($this->refreshFonts) {
-                    $fontVal = $line[2];
-                    if ($this->fonts[$fontVal] == VOID) {
-                        $this->fonts[$fontVal] = 1;
-                    } else {
-                        $this->fonts[$fontVal]++;
-                    }
-                }
-
-                if ($this->refreshPie) {
-                    $unitIndex = $this->pieUnit == 'px'? 0 : 1;
-                    $value = $line[$unitIndex];
-                    foreach($this->pieArray as $label => $minMax) {
-                        if ($value >= $minMax['min'] && $value <= $minMax['max']) {
-                            $this->pieValues[$label]++;
-                        }
-                    }
-
-                }
-            }
-            fclose($file);
-
-            if ($this->refreshPie) {
-                /* Set 0 values to Void */
-                foreach ($this->pieValues as $label => $val) {
-                    if ($val == 0) {
-                        $this->pieValues[$label] = VOID;
-                    }
-                    $this->pieLabels[] = ' ' . $label;
-                }
-            }
-
-            /*echo "<br>***************** EMs<br>" . print_r($this->ems, true);
-            echo "<br>***************** Pxs<br>" . print_r($this->pxs, true);
-            echo "<br>***************** Fonts<br>" . print_r($this->fonts, true);*/
         }
 
         /* Next three methods create the image files */
@@ -397,8 +267,6 @@ if (!class_exists('SizeMattersDraw')) {
                 $settings = array("Gradient" => FALSE, "DisplayPos" => LABEL_POS_TOP, "DisplayValues" => FALSE, "DisplayR" => 0, "DisplayG" => 0, "DisplayB" => 0, "DisplayShadow" => FALSE,); //array("Surrounding"=>-30,"InnerSurrounding"=>30)
                 $myPicture->drawBarChart($settings);
 
-                /* Write the chart legend */
-// $myPicture->drawLegend(580, 12, array("Style" => LEGEND_BOX, "Mode" => LEGEND_HORIZONTAL));
 
                 /* Render the picture to .png file */
                 $myPicture->render($this->imagePath . "pxs-bar-chart.png");
@@ -528,10 +396,6 @@ if (!class_exists('SizeMattersDraw')) {
                 /* Create and populate the pData object */
                 $MyData = new pData();
 
-                /* Force Y axis to start at 0 */
-
-                // $this->pies = array(40,30,20,10);
-                // $pv = array_keys($this->pieValues);
                 $pies = array_values($pieValues);
                 /* Add main data */
                 $MyData->addPoints($pies, "Visitor Percentages"); //xxx
@@ -552,19 +416,12 @@ if (!class_exists('SizeMattersDraw')) {
 
                 /* Draw the scale  */
                 $myPicture->setGraphArea(50, 30, 880, 200);
-                // $myPicture->drawScale(array("CycleBackground" => TRUE, 'LabelRotation' => 90, "AutoAxisLabels" => FALSE, "GridR" => 0, "GridG" => 0, "GridB" => 0, "GridAlpha" => 10));
+
                 $myPicture->drawText(450, 55, "Device Percentages", array("FontSize" => 15, "Align"
                 =>
                     TEXT_ALIGN_BOTTOMMIDDLE));
-                /*$myPicture->drawText(450, 250, "Pixels", array("FontSize" => 10, "Align" =>
-                    TEXT_ALIGN_BOTTOMMIDDLE));*/
                 /* Turn on shadow computing */
                 $myPicture->setShadow(TRUE, array("X" => 1, "Y" => 1, "R" => 0, "G" => 0, "B" => 0, "Alpha" => 10));
-
-                /* Draw the chart */
-               //  $settings = array("Gradient" => FALSE, "DisplayPos" => LABEL_POS_TOP, "DisplayValues" => FALSE, "DisplayR" => 0, "DisplayG" => 0, "DisplayB" => 0, "DisplayShadow" => FALSE,); //array("Surrounding"=>-30,"InnerSurrounding"=>30)
-                // $myPicture->drawBarChart($settings);
-                /* Create the pPie object */
 
                 $PieChart = new pPie($myPicture, $MyData);
 
@@ -575,17 +432,11 @@ if (!class_exists('SizeMattersDraw')) {
                 $PieChart->setSliceColor(2, array("R" => 20, "G" => 72, "B" => 49));
                 $PieChart->setSliceColor(3, array("R" => 25, "G" => 43, "B" => 72));
                 $PieChart->setSliceColor(4, array("R" => 20, "G" => 0, "B" => 0));
+                $PieChart->setSliceColor(5, array("R" => 0, "G" => 20, "B" => 0));
+                $PieChart->setSliceColor(6, array("R" => 0, "G" => 0, "B" => 20));
 
 
-
-                                /* Enable shadow computing */
-
-               /* $myPicture->setShadow(TRUE, array("X" => 3, "Y" => 5, "R" => 0, "G" => 0, "B" =>
-                    1, "Alpha" => 20));*/
-
-
-
-                /* Draw a splitted pie chart */
+                 /* Draw a splitted pie chart */
 
                 $PieChart->draw3DPie(455, 150, array("WriteValues" => TRUE, "DataGapAngle" => 10,
                     "DataGapRadius" => 6, "Border" => FALSE, "ValueR" => 250, "ValueG" => 250,
@@ -632,6 +483,5 @@ if (!class_exists('SizeMattersDraw')) {
         }
 
     }
-
 
 }

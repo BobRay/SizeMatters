@@ -158,18 +158,5 @@ if (! class_exists('SizeMatters')) {
             file_put_contents($path . 'pxs.data', serialize($pxsData));
             file_put_contents($path . 'fonts.data', serialize($fontsData));
         }
-
-        /*function createNewDataFile($path, $start, $end, $value = 0) {
-            $data = array_fill($start, $end, $value);
-            $sData = serialize($data);
-            $fp = fopen($path, 'w');
-            if ($fp) {
-                fwrite($fp, $sData);
-                fclose($fp);
-            } else {
-                $this->modx->log(modX::LOG_LEVEL_ERROR, '[SizeMatters] Could not create file: ' . $path);
-            }
-        }*/
-
     }
 }

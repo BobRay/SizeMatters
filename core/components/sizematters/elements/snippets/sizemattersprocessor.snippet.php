@@ -33,8 +33,7 @@
  *
  * @package sizematters
  **/
-//C:/xampp/htdocs/addons/assets/mycomponents/sizematters/core/components/sizematters/components/sizematters/model/sizematters/sizematters.class.php
-//C:\xampp\htdocs\addons\assets\mycomponents\sizematters\core\components\sizematters\model\sizematters\sizematters.class.php
+
 /* sm paths; Set the sm. System Settings only for development  in MyComponent */
 $smCorePath = $modx->getOption('sm.core_path', null, MODX_CORE_PATH . 'components/SizeMatters/');
 require_once($smCorePath . 'model/sizematters/sizematters.class.php');

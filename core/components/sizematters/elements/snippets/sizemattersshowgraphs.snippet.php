@@ -34,14 +34,8 @@
  * @package sizematters
  **/
 
-
-
-
-
-
 $smCorePath = $modx->getOption('sm.core_path', null, MODX_CORE_PATH . 'components/SizeMatters/');
 require_once($smCorePath . 'model/sizematters/sizemattersdraw.class.php');
-
 
 $smGraph = new SizeMattersDraw($modx, $scriptProperties);
 
