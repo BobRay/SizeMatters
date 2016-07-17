@@ -374,7 +374,7 @@ if (!class_exists('SizeMattersDraw')) {
             $pieLabels = array();
             foreach ($pieConfig as $label => $minMax) {
                 $pieValues[$label] = 0;
-                $pieLabels[] = $label;
+                $pieLabels[] = $label . '('. $minMax['min'] . ' - ' . $minMax['max'] . ')';
             }
 
             $data = unserialize(file_get_contents($file));
@@ -438,10 +438,11 @@ if (!class_exists('SizeMattersDraw')) {
 
                  /* Draw a splitted pie chart */
 
-                $PieChart->draw3DPie(455, 150, array("WriteValues" => TRUE, "DataGapAngle" => 10,
+                $PieChart->draw3DPie(555, 155, array(
+                    "WriteValues" => TRUE, "DataGapAngle" => 10,
                     "DataGapRadius" => 6, "Border" => FALSE, "ValueR" => 250, "ValueG" => 250,
-                    "ValueB" => 250, "ValueAlpha" => 100 ));
-
+                    "ValueB" => 250, "ValueAlpha" => 100
+                ));
 
                 /* Write the chart legend */
                 $myPicture->setFontProperties(array("FontName" => $this->fontDir . 'verdana.ttf',
