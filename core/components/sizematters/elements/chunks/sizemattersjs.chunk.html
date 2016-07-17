@@ -6,7 +6,8 @@
                 document.documentElement["scrollWidth"], document.body["offsetWidth"],
                 document.documentElement["offsetWidth"]);
 
-        var f = parseFloat(window.getComputedStyle(document.body).fontSize);
+        /*var f = parseFloat(window.getComputedStyle(document.body).fontSize);*/
+        var f = parseFloat(window.getComputedStyle(document.body).getPropertyValue('font-size'));
 
         /* Kindle Fire HDX adjustments */
         if (dpr == 2 && (w==1600 || w==2559)) {
@@ -14,14 +15,14 @@
             f = f/2;
         }
 
-        if (w > 2000) {
+        /*if (w > 2000) {
             w = 2000;
-        }
+        }*/
 
         var ems = Math.round( w / f);
-        if (ems > 100) {
+        /*if (ems > 100) {
             ems = 100;
-        }
+        }*/
 
 
         console.log("DPR: " + dpr);
@@ -30,7 +31,7 @@
         console.log("Font Size in Pixels: " + f);
 
 
-        data = JSON.stringify({w,ems,f});
+        data = JSON.stringify([w,ems,f]);
         var bustCache = '?' + new Date().getTime();
         var request = new XMLHttpRequest();
         request.open('POST', '[[++site_url]]size-matters-processor.html' + bustCache, true);
