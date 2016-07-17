@@ -417,9 +417,12 @@ if (!class_exists('SizeMattersDraw')) {
                 /* Draw the scale  */
                 $myPicture->setGraphArea(50, 30, 880, 200);
 
-                $myPicture->drawText(450, 55, "Device Percentages", array("FontSize" => 15, "Align"
-                =>
-                    TEXT_ALIGN_BOTTOMMIDDLE));
+                $myPicture->drawText(450, 55, "Device Percentages " . '(Unit: ' . $unit . ')', array("FontSize" => 15, "
+                    Align" => TEXT_ALIGN_BOTTOMMIDDLE));
+
+                /*$myPicture->drawText(450, 55, "Unit: " . $unit, array("FontSize" => 15, "
+                    Align" => TEXT_ALIGN_BOTTOMMIDDLE));*/
+
                 /* Turn on shadow computing */
                 $myPicture->setShadow(TRUE, array("X" => 1, "Y" => 1, "R" => 0, "G" => 0, "B" => 0, "Alpha" => 10));
 
