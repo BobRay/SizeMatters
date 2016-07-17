@@ -417,7 +417,7 @@ if (!class_exists('SizeMattersDraw')) {
                 /* Draw the scale  */
                 $myPicture->setGraphArea(50, 30, 880, 200);
 
-                $myPicture->drawText(450, 55, "Device Percentages " . '(Unit: ' . $unit . ')', array("FontSize" => 15, "
+                $myPicture->drawText(295, 55, "Device Percentages " . '(Unit: ' . $unit . ')', array("FontSize" => 15, "
                     Align" => TEXT_ALIGN_BOTTOMMIDDLE));
 
                 /*$myPicture->drawText(450, 55, "Unit: " . $unit, array("FontSize" => 15, "
