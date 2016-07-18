@@ -119,44 +119,63 @@ if (! class_exists('SizeMatters')) {
             unlink($truncateLockFileName);
 
         }
+        /**
+         * Removes empty elements from end of array
+         * */
+        function truncateArray($arr, $index) {
+            return array_slice($arr, 0, $index + 2);
+        }
+
         protected function updateDataFiles($logFileName) {
             $path = $this->logDir;
+            $emsMax = 0;
+            $pxsMax = 0;
+            $fontsMax = 0;
+            $emsData = array_fill(0, 250, 0);
+            $pxsData = array_fill(0, 3500, 0);
+            $fontsData = array_fill(0, 40, 0);
 
             if (file_exists($path . 'ems.data')) {
-                $emsData = unserialize(file_get_contents($path . 'ems.data'));
-            } else {
-                $emsData = array_fill(0, 100, 0);
+                $data = unserialize(file_get_contents($path . 'ems.data'));
+                $emsData = array_merge($emsData, $data);
             }
             if (file_exists($path . 'pxs.data')) {
-                $pxsData = unserialize(file_get_contents($path . 'pxs.data'));
-            } else {
-                $pxsData = array_fill(0, 2000, 0);
+                $data = unserialize(file_get_contents($path . 'pxs.data'));
+                $pxsData = array_merge($pxsData, $data);
             }
+
             if (file_exists($path . 'fonts.data')) {
-                $fontsData = unserialize(file_get_contents($path . 'fonts.data'));
-            } else {
-                $fontsData = array_fill(0, 40, 0);
+                $data = unserialize(file_get_contents($path . 'fonts.data'));
+                $fontsData = array_merge($fontsData, $data);
             }
+
+            unset($data);
 
 
             $fp = fopen($logFileName, 'r');
 
             if ($fp) {
                 while ($line = fgetcsv($fp, 25)) {
+
                     $px = (int) $line[0];
                     // $px = $px > 1000? 1000 : $px;
+                    $pxsMax = $px > $pxsMax ? $px : $pxsMax;
                     $pxsData[$px]++;
+
                     $em = (int) $line[1];
+                    $emsMax = $em > $emsMax ? $em : $emsMax;
                     $emsData[$em]++;
+
                     $font = (int) rtrim($line[2]);
+                    $fontsMax = $font > $fontsMax ? $font : $fontsMax;
                     $fontsData[$font]++;
                 }
             }
             fclose($fp);
 
-            file_put_contents($path . 'ems.data', serialize($emsData));
-            file_put_contents($path . 'pxs.data', serialize($pxsData));
-            file_put_contents($path . 'fonts.data', serialize($fontsData));
+            file_put_contents($path . 'ems.data', serialize($this->truncateArray($emsData, $emsMax + 4)));
+            file_put_contents($path . 'pxs.data', serialize($this->truncateArray($pxsData, $pxsMax + 48)));
+            file_put_contents($path . 'fonts.data', serialize($this->truncateArray($fontsData, $fontsMax)));
         }
     }
 }
