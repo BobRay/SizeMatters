@@ -32,10 +32,12 @@ the visitors to your site. It also shows the font size used.</p>
 [[!SizeMatters]]
 </fixedpre></pre>
 
-<p>You can control which graphs are shown with the properties in the snippet tag:</p>
+
+<div class="box">To see the results, view the SizeMattersShowGraphs resource. You will get an &quot;Insufficient Data&quot; message until about 100 hits have occurred. </div>
 
 
-<div class="box">To see the results, view the SizeMattersShowGraphs resource. You will get an &quot;Insufficient Data&quot; message until about 100 hits. </div>
+<p>&nbsp;</p>
+
 
 <h3>Devices</h3>
 
@@ -46,12 +48,11 @@ the visitors to your site. It also shows the font size used.</p>
 <p>&nbsp;</p>
 
 <div class="box">
-    <p>SizeMatters writes a short line of text to the raw data file (<code>core/components/sizematters/logs/log.txt</code>)
-    each time a page with the SizeMatters snippet tag is visited. The file can get very large depending on
-    how many pages are involved and how busy your site is. The recommended place for the tag is at the end of
-    the Resource Content field for your home page. If the tag is in a Template that's used by a lot
-    of pages, the log can grow very big, very fast. The PHP process that analyzes the data and draws the
-    graphs may time out.</p>
+    <p>SizeMatters appends a short line of text to the raw data file (<code>core/components/sizematters/logs/log.txt</code>)
+    each time a page with the SizeMatters snippet tag is visited. If you put the tag in a Template used by a lot of pages there is a slight chance of data loss as many processes try to write to the file at the same time. The recommended place for the tag is at the end of
+    the Resource Content field for your home page. If your site doesn't get a lot of visitors, you may choose to put it on more pages, especially at first.</p>
+
+    <p>If your site is extremely busy, you may choose to put the tag in the Resource Content field of a page that's not visited very often.</p>
 </div>
 
 <p>&nbsp;</p>
@@ -59,31 +60,18 @@ the visitors to your site. It also shows the font size used.</p>
 <p>The snippet just injects a small amount of JavaScript code that calls a processor asynchronously, so it shouldn't
 have much effect on page-load times.</p>
 
-<p>To show the results, just view the SizeMatters Show Graphs resource. You can control which graphs are shown and whether or not they are up-to-date with the properties of the SizeMattersShowGraphs snippet on that page.</p>
+<p>To show the results, just view the SizeMatters Show Graphs resource. You can control which graphs are shown and whether or not they are up-to-date with the properties of the SizeMattersShowGraphs snippet on that page. Change the <code>1</code> to a <code>0</code> to omit a graph. Leaving out some of the graphs (especially the pixels graph) can make the rendering much faster.</p>
 
 <pre class="brush: html; toolbar: false;"><fixedpre>
 [[!SizeMattersShowGraphs?
     &showEms=`1`
-    &refreshEms=`1`
     &showPxs=`1`
-    &refreshPxs=`1`
     &showFonts=`1`
-    &refreshFonts=`1`
+    &showPie=`1`
 ]]
 </fixedpre></pre>
 
 
-<p>The three <code>&show</code> properties determine whether each graph is shown. The three <code>&refresh</code>
-properties determine whether a new graph is drawn before showing it. Processing the raw values and drawing
-each graph takes time (especially for the Pixels graph), so you may want to turn refreshing off once you have a significant amount of data
- to display, and turn it back on periodically to bring the graphs up to date.</p>
-
-<p>If the raw data file has grown very large, the analysis of the data and graph drawing may cause a PHP timeout.
-    In that case, you won't see the graphs and may see a blank page. If this turns out to be a common problem, I
-may rewrite the code to extract the processed data to a much smaller file when refreshing things.</p>
-
-<p>If your site is very busy, you may choose to put the tag in the Resource Content field of a page
-that's not visited very often.</p>
 
 <p>&nbsp;</p>
 <h3>Using the Information</h3>
@@ -99,14 +87,69 @@ that's not visited very often.</p>
     media queries. Any responsive design strategy involves compromises, and seeing the
     distribution of viewport widths for your site visitor may help with those decisions.</p>
 
-<p>At some point, if there is some demand for it, I may add a feature to show the percentages of
-    users visiting with phone, tablet,  laptop, and desktop devices.</p>
+
+<p>&nbsp;</p>
+
+<h3>The Pie Chart</h3>
+<p>The Pie Chart shows the percentages of users visiting with phone, tablet,  laptop, and desktop devices (or whatever you specify). It can be configured by changing the values in the PieConfig chunk, or by creating a new config chunk and specifying it in the <code>&pieConfigChunk</code> property.</p>
+
+<p>The PieConfig Tpl looks like this (this example uses Ems as the unit):</p>
+
+<pre class="brush: html; toolbar: false;"><fixedpre>
+unit:em
+Phones:0:29.99
+Tablets:30:47.99
+Laptops:48:63.99
+Desktops:64:99.99
+Lg. Desktops:100:9999
+</fixedpre></pre>
+
+The unit (<code>em</code> or <code>px</code>) should go on the first line. Each line below must be in the form:
+<pre class="brush: html; toolbar: false;"><fixedpre>
+Label:min:max
+</fixedpre></pre>
+
+<p><code>min</code> and <code>max</code> must be specified in the unit specified in the first line.</p>
+
+<p>You can use as many or as few lines as you like (within reason). You might, for example, choose to have just three classes (e.g., phones, tablets, other). If you already have media queries in your CSS, it makes sense to use those breakpoints.</p>
+
+
+
+<p>&nbsp;</p>
+
+<div class="box">
+    <p>Because of the way the calculations are made, and browser anomalies, the percentages may differ (sometimes significantly) depending on whether you use ems or pixels as the unit, even if you try to make the breakpoints the same. For example, at extremely small zoom levels (zommed out), a bug in Chrome leads it to report a larger font size (even though the font is actually smaller). This will affect the ems calculation, but not the pixel calculation, making the percentages diverge. The zoom level must be fairly extreme for this to happen, so the odds are that you won't experience it.</p>
+
+    <p>Some devices (notably Kindle HDXs) will jack up the font size to compensate for their higher pixel density. SizeMatters tries to correct for this, but the correction is not perfect.</p>
+</div>
+
+
+<p>&nbsp;</p>
+
+<h3>Disabling SizeMatters</h3>
+
+<p>You can disable writing to the <code>log.txt</code> file by simply removing the SizeMatters snippet tag anywhere it exists. The JS will not be injected and no SizeMatters code will run when pages load. If you've had enough visitors to create the three data files (about 100 visits), you can still look at the graphs on the SizeMattersShowGraphs page.</p>
+
+
+<p>&nbsp;</p>
+
+<h3>Starting Over</h3>
+
+<p>If you've just made your site responsive, you may get a lot more mobile visitors. You might want to save the current graphs and start over to get an accurate look at the new visitors. The images are in the <code>assets/components/sizematters/images/</code> directory and they can be viewed directly by appending that URL to your site URL and adding the filename at the end. If you rename them periodically, you can see how the distribution of visitors changes over time.</p>
+
+<p>After renaming the image files, delete the three data files: <code>ems.data</code>, <code>pxs.data</code>, <code>fonts.data</code>. Then, either edit the <code>log.txt</code> file and save it empty, or delete it and recreate it. <b>Important: </b> Make sure the <code>log.txt</code> file exists when you're finished.</p>
+
+<p>All the data files are in the <code>core/components/sizematters/logs/</code> directory.</p>
+
+<p>&nbsp;</p>
+
+<p>Musings on Responsive Design</p>
 
 <p>How to approach Responsive site design is controversial, but doing a mobile-first design is
     a common recommendation. I like using Ems and percentages almost exclusively. (Please don't
     use this site as an example until I get around to making it responsive &mdash; I beg you not
     to look at the current CSS and HTML used at Bob's Guides &mdash; it's an embarrassing,
-    shoemaker's child mess.)
+    shoemaker's-child mess.)
 </p>
 
 <p>In a mobile-first design, the CSS at the top of your CSS file is for mobile devices. Once you
@@ -153,16 +196,12 @@ that's not visited very often.</p>
 
 <p>SizeMatters injects JavaScript into the page that asks the browser about the font size and viewport
 width (not the device with, because ... who cares). The results may depend on whether you have a
-meta viewport tag and what's in it. The JS sends a the three data points to a processor with and
-asynchronous Ajax call. The JS is vanilla (no Jquery). The processor sanitizes the data
-and records it as a single line in a CSV data file.</p>
+meta viewport tag and what's in it. The JS sends a the three data points (px, em, font) to a processor with an
+asynchronous Ajax call. The JS is vanilla (no Jquery). The processor sanitizes the data and won't process lines containing anything but numbers and commas. The processor then records the data as a single line in a CSV data file: <code>log.txt</code> in the <code>core/components/sizematters/logs/</code> directory. The <code>log.txt</code> file is human-readable, but should never be edited directly. </p>
 
-<p>If the <code>&refresh</code> option is on, the SizeMattersShowGraphs snippet reads and
-    analyzes the data from  the file and sends it to the graphing software, which creates a .png
-    image for each graph, then the graphs are displayed (depending on the <code>&show</code>
-    properties) with a standard <code>img</code> tag.</p>
+<p>The <code>log.txt</code> file would get immense, especially on busy sites. To prevent this, whenever it's over 1000 bytes, (about 100 visitors). The processor locks the file, reads it, updates the three data files (<code>pxs.data</code>, <code>ems.data</code>, <code>fonts.data)</code> &mdash; also in the <code>core/components/sizematters/logs/</code>, and empties the <code>log.txt</code> file. Then it unlocks the file.</p>
 
-<p>If the <code>&refresh</code> option is off, the existing (possibly out-of-date) graphs are shown.</p>
+<p>The contents of the three data files are what the snippet that draws the graphs sends to the graphing software (after a little massaging). This means that updating the log file, updating the data files, and drawing the graphs will never slow down, regardless of how long the program has been running. The three data files are created with PHP's <code>serialize()</code> function, so unlike the <code>log.txt</code> file, they appear as gibberish when viewed. They are read and parsed very quickly. Most of the time it takes for the SizeMattersShowGraphs page to show up is spent inside the graphing software. Looking at the graphs, you can see why.</p>
 
 <p>The graphs are produced with <a target="_blank" href="http://www.pchart.net/">pChart 2.0</a>.</p>
 
@@ -200,32 +239,18 @@ and records it as a single line in a CSV data file.</p>
         <td>Show the Ems graph in the results</td>
         <td>Yes</td>
     </tr>
-    <tr>
-        <td>refreshEms</td>
-        <td>Process the raw data and create a new Ems graph image</td>
-        <td>Yes</td>
-    </tr>
 
     <tr>
         <td>showPxs</td>
         <td>Show the CSS Pixel graph in the results</td>
         <td>Yes</td>
     </tr>
-    <tr>
-        <td>refreshEms</td>
-        <td>Process the raw data and create a new Pixels graph image</td>
-        <td>Yes</td>
-    </tr>
+
     <tr>
         <td>showFonts</td>
         <td>Show the Fonts graph in the results</td>
         <td>Yes</td>
     </tr>
-    <tr>
-        <td>refreshFonts</td>
-        <td>Process the raw data and create a new Fonts graph image</td>
-        <td>Yes</td>
-    </tr>
-    
+
     
 </table>
