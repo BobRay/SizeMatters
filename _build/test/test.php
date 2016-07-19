@@ -50,12 +50,6 @@ $scriptProperties['showEms'] = true;
 $scriptProperties['showFonts'] = true;
 $scriptProperties['showPie'] = true;
 
-$scriptProperties['refreshPxs'] = true;
-$scriptProperties['refreshEms'] = true;
-$scriptProperties['refreshFonts'] = true;
-$scriptProperties['refreshPie'] = true;
-
-
 include 'C:\xampp\htdocs\addons\assets\mycomponents\sizematters\core\components\sizematters\model\sizematters\sizemattersdraw.class.php';
 $sm = new SizeMattersDraw($modx, $scriptProperties);
 
