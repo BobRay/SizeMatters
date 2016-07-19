@@ -35,7 +35,10 @@
  **/
 
 $smCorePath = $modx->getOption('sm.core_path', null, MODX_CORE_PATH . 'components/SizeMatters/');
+$smAssetPath = $modx->getOption('sm.assets_url', null, MODX_ASSETS_URL . 'components/SizeMatters/');
 require_once($smCorePath . 'model/sizematters/sizemattersdraw.class.php');
+$modx->regClientCSS($smAssetPath . 'css/sizematters.css');
+
 
 $smGraph = new SizeMattersDraw($modx, $scriptProperties);
 

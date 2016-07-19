@@ -6,3 +6,33 @@
  *
  * @package sizematters
  */
+
+#size_matters {
+    font-family: Verdana, sans-serif;
+    width:100%;
+    margin:0;
+    background-color: #d0e6e6;
+    padding:0 0 8em 0;
+}
+
+#size_matters h3 {
+    margin:auto;
+    padding:2em 0 0 3em;
+    font-weight:bold;
+    font-size:2em;
+    color:Navy;
+}
+
+#size_matters p {
+    font-weight:normal;
+    font-size:1.5em;
+    margin:1em 5em 1em 1em;
+    padding:0 5em;
+    line-height: 1.5em;
+    width:60%
+}
+
+#size_matters img {
+    margin:0;
+    padding:2em 10em;
+}
