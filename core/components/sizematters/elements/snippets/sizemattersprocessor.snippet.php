@@ -35,7 +35,7 @@
  **/
 
 /* sm paths; Set the sm. System Settings only for development  in MyComponent */
-$smCorePath = $modx->getOption('sm.core_path', null, MODX_CORE_PATH . 'components/SizeMatters/');
+$smCorePath = $modx->getOption('sm.core_path', null, MODX_CORE_PATH . 'components/sizematters/');
 require_once($smCorePath . 'model/sizematters/sizematters.class.php');
 $smLogPath = $smCorePath . 'logs/';
 $smLogFileName = $smLogPath . 'log.txt';
