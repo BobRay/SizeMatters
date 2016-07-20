@@ -110,11 +110,12 @@ if (! class_exists('SizeMatters')) {
             }
 
             $this->updateDataFiles($logFileName);
-            /* Truncate main log file */
-            /*$fp = fopen($logFileName, 'w');
+
+             /* Truncate main log file */
+            $fp = fopen($logFileName, 'w');
             if ($fp) {
                 fclose($fp);
-            }*/
+            }
             /* Clear lock */
             unlink($truncateLockFileName);
 
