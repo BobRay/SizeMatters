@@ -141,7 +141,7 @@ if (!class_exists('SizeMattersDraw')) {
             $file = $this->dataDir . 'ems.data';
 
             if (! file_exists($file)) {
-                return $this->modx->getChunk('SizeMattersEmsTpl', array('sm.image' => 'Insufficient Data'));
+                return $this->modx->getChunk('SizeMattersEmsTpl', array('sm.image' => '<div class="no_data"><p class="no_data_p">Insufficient Data</p></div>'));
             }
 
             $emsArray = unserialize(file_get_contents($file));
@@ -213,7 +213,7 @@ if (!class_exists('SizeMattersDraw')) {
             $file = $this->dataDir . 'pxs.data';
 
             if (!file_exists($file)) {
-                return $this->modx->getChunk('SizeMattersPxsTpl', array('sm.image' => 'Insufficient Data'));
+                return $this->modx->getChunk('SizeMattersPxsTpl', array('sm.image' => '<div class="no_data"><p class="no_data_p">Insufficient Data</p></div>'));
 
             }
 
@@ -283,7 +283,7 @@ if (!class_exists('SizeMattersDraw')) {
             $file = $this->dataDir . 'fonts.data';
 
             if (!file_exists($file)) {
-                return $this->modx->getChunk('SizeMattersFontsTpl', array('sm.image' => 'Insufficient Data'));
+                return $this->modx->getChunk('SizeMattersFontsTpl', array('sm.image' => '<div class="no_data"><p class="no_data_p">Insufficient Data</p></div>'));
 
             }
 
@@ -360,7 +360,7 @@ if (!class_exists('SizeMattersDraw')) {
             $unit = $pieConfig['unit'];
             $file = $this->dataDir . $unit . 's' . '.data';
             if (! file_exists($file)) {
-                return $this->modx->getChunk('SizeMattersPieTpl', array('sm.image' => 'Insufficient Data'));
+                return $this->modx->getChunk('SizeMattersPieTpl', array('sm.image' => '<div class="no_data"><p class="no_data_p">Insufficient Data</p></div>'));
             }
             array_shift($pieConfig);
             $pieValues = array();
