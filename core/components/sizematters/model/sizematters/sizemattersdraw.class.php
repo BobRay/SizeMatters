@@ -359,6 +359,9 @@ if (!class_exists('SizeMattersDraw')) {
             }
             $pieConfigChunk = $this->modx->getOption('pieConfigChunk', $this->props, 'SizeMattersPieConfig', true);
             $chunk = $this->modx->getChunk($pieConfigChunk);
+            if (! $chunk) {
+                return '<p><b>Error: Could not find pie config chunk: ' . $pieConfigChunk . '</b></p>';
+            }
             $pieConfig = $this->parsePie($chunk);
             $unit = $pieConfig['unit'];
             $file = $this->dataDir . $unit . 's' . '.data';
