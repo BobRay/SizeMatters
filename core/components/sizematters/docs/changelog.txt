@@ -1,5 +1,10 @@
 Changelog for SizeMatters
 
+SizeMatters 1.0.1-pl
+---------------------------------
+Add error message if PieConfig chunk not found
+Test for GD and FreeType on install
+
 SizeMatters 1.0.0
 ---------------------------------
 Initial Version
