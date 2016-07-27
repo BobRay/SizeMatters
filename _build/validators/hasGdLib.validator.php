@@ -30,12 +30,21 @@ if ($object->xpdo) {
     switch ($options[xPDOTransport::PACKAGE_ACTION]) {
         case xPDOTransport::ACTION_INSTALL:
             /* return false if conditions are not met */
+            if (!function_exists('imagettftext')) {
+                $modx->log(modX::LOG_LEVEL_ERROR, 'SizeMatters requires both GD and FreeType to be installed');
+                return false;
+            }
 
-            /* [[+code]] */
             break;
+
         case xPDOTransport::ACTION_UPGRADE:
             /* return false if conditions are not met */
-            /* [[+code]] */
+
+            if (!function_exists('imagettftext')) {
+                $modx->log(modX::LOG_LEVEL_ERROR, 'SizeMatters requires both GD and FreeType to be installed');
+                return false;
+            }
+
             break;
 
         case xPDOTransport::ACTION_UNINSTALL:
