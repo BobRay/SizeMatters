@@ -91,9 +91,9 @@ have much effect on page-load times.</p>
 <p>&nbsp;</p>
 
 <h3>The Pie Chart</h3>
-<p>The Pie Chart shows the percentages of users visiting with phone, tablet,  laptop, and desktop devices (or whatever you specify). It can be configured by changing the values in the PieConfig chunk, or by creating a new config chunk and specifying it in the <code>&pieConfigChunk</code> property.</p>
+<p>The Pie Chart shows the percentages of users visiting with phone, tablet,  laptop, and desktop devices (or whatever you specify). It can be configured by changing the values in the SizeMattersPieConfig chunk, or by creating a new config chunk and specifying it in the <code>&pieConfigChunk</code> property.</p>
 
-<p>The PieConfig Tpl looks like this (this example uses Ems as the unit):</p>
+<p>The SizeMattersPieConfig chunk looks like this (this example uses Ems as the unit):</p>
 
 <pre class="brush: html; toolbar: false;"><fixedpre>
 unit:em
@@ -104,14 +104,16 @@ Desktops:64:99.99
 Lg. Desktops:100:9999
 </fixedpre></pre>
 
-The unit (<code>em</code> or <code>px</code>) should go on the first line. Each line below must be in the form:
+The unit (<code>em</code> or <code>px</code>) must go on the first line. Each line below must be in the form:
 <pre class="brush: html; toolbar: false;"><fixedpre>
 Label:min:max
 </fixedpre></pre>
 
-<p><code>min</code> and <code>max</code> must be specified in the unit specified in the first line.</p>
+<p>Each line except the first must have exactly two colons, and <code>min</code> and <code>max</code> must be specified in the unit specified in the first line (they can have decimal points).</p>
 
-<p>You can use as many or as few lines as you like (within reason). You might, for example, choose to have just three classes (e.g., phones, tablets, other). If you already have media queries in your CSS, it makes sense to use those breakpoints.</p>
+<p>You can use as many or as few lines as you like (within reason). You might, for example, choose to have just three classes (e.g., phones, tablets, other). If you already have media queries in your CSS, you might want to use those breakpoints.</p>
+
+<p>The default SizeMatterPieConfig chunk uses ems. There is an alternative config chunk called SizeMattersPieConfig2 that uses pixels as the unit. If you want to use it, just include <code>&pieConfigChunk=`SizeMattersPieConfig2</code> in the SizeMatters snippet tag on the SizeMattersShowGraphs resource.</p>
 
 
 
