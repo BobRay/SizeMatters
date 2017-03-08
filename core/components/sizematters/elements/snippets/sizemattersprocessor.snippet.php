@@ -45,6 +45,20 @@ $debug = false;
 
 $sm = new SizeMatters($smLogPath, $scriptProperties, $modx);
 
+$fc = stripslashes(file_get_contents("php://input"));
+if (!empty($fc)) {
+  $jc = json_decode($fc);
+
+  if ($jc === null) {
+      return '';
+  }
+
+  $i = array_values($jc);
+
+} else {
+   return '';
+}
+
 $i = array_values(json_decode(stripslashes(file_get_contents("php://input")), true));
 // $modx->log(modX::LOG_LEVEL_ERROR, 'Before Validation: ' . print_r($i, true));
 if ($sm->validate($i)) {
