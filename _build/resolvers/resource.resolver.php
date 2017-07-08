@@ -3,7 +3,7 @@
 * Resource resolver  for SizeMatters extra.
 * Sets template, parent, and (optionally) TV values
 *
-* Copyright 2016 by Bob Ray <http://bobsguides.com>
+* Copyright 2016-2017 Bob Ray <https://bobsguides.com>
 * Created on 06-15-2016
 *
  * SizeMatters is free software; you can redistribute it and/or modify it under the

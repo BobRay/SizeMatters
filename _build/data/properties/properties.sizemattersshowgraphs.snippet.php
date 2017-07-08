@@ -2,7 +2,7 @@
 /**
  * Properties file for SizeMattersShowGraphs snippet
  *
- * Copyright 2016 by Bob Ray <http://bobsguides.com>
+ * Copyright 2016-2017 Bob Ray <https://bobsguides.com>
  * Created on 07-16-2016
  *
  * @package sizematters

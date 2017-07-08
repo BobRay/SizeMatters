@@ -16,13 +16,13 @@ $components = array(
     'packageName' => 'SizeMatters',  /* No spaces, no dashes */
     'packageNameLower' => $packageNameLower,
     'packageDescription' => 'SizeMatters project for MyComponent extra',
-    'version' => '1.0.2',
+    'version' => '1.0.3',
     'release' => 'pl',
     'author' => 'Bob Ray',
-    'email' => '<http://bobsguides.com>',
-    'authorUrl' => 'http://bobsguides.com',
+    'email' => '<https://bobsguides.com>',
+    'authorUrl' => 'https://bobsguides.com',
     'authorSiteName' => "Bob's Guides",
-    'packageDocumentationUrl' => 'http://bobsguides.com/sizematters-tutorial.html',
+    'packageDocumentationUrl' => 'https://bobsguides.com/sizematters-tutorial.html',
     'copyright' => '2016',
 
     /* no need to edit this except to change format */
